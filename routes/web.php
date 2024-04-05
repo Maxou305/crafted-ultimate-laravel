@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\CommentController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ShopController;
 use App\Http\Controllers\UserController;
@@ -46,7 +48,24 @@ Route::put('/users/{id}', [UserController::class, 'update'])->name('users.update
 Route::delete('/users/{id}', [UserController::class, 'destroy'])->name('users.destroy');
 
 // ORDERS
+Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
+Route::get('/orders/{id}', [OrderController::class, 'getById'])->name('orders.getById');
+Route::get('/orders/user/{id}', [OrderController::class, 'getByUserId'])->name('orders.getByUser');
+
+Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');
+
+Route::delete('/orders/{id}', [OrderController::class, 'destroy'])->name('orders.destroy');
 
 // ORDER PRODUCTS
 
 // COMMENTS
+Route::get('/comments', [CommentController::class, 'index'])->name('comments.index');
+Route::get('/comments/{id}', [CommentController::class, 'getById'])->name('comments.getById');
+Route::get('/comments/user/{id}', [CommentController::class, 'getByUserId'])->name('comments.getByUser');
+Route::get('/comments/product/{id}', [CommentController::class, 'getByProductId'])->name('comments.getByProduct');
+
+Route::post('/comments', [CommentController::class, 'store'])->name('comments.store');
+
+Route::put('/comments/{id}', [CommentController::class, 'update'])->name('comments.update');
+
+Route::delete('/comments/{id}', [CommentController::class, 'destroy'])->name('comments.destroy');

@@ -74,6 +74,7 @@ class ProductController extends Controller
         ]);
         $product = Product::create($request->all());
         $product->save();
+        return response()->json($product, 201);
     }
 
     /**

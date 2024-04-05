@@ -13,6 +13,15 @@ class Order extends Model
     use HasFactory;
     use HasUuids;
 
+    protected $fillable = [
+        'user_id',
+        'order_number',
+    ];
+
+    protected $hidden = [
+        'user_id',
+    ];
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
