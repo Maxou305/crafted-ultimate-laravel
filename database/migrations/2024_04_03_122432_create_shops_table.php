@@ -16,7 +16,7 @@ return new class extends Migration {
             $table->string('biography');
             $table->string('theme', 20);
             $table->string('logo');
-            $table->foreignUuid('user_id')->constrained('users');
+            $table->foreignUuid('user_id')->constrained('users')->onDelete('cascade');
             $table->timestamps();
         });
     }

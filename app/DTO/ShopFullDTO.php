@@ -20,6 +20,6 @@ class ShopFullDTO
         $this->biography = $shop->biography;
         $this->theme = $shop->theme;
         $this->logo = $shop->logo;
-        $this->user = $shop->user;
+        $this->user = new UserShortDTO($shop->user);
     }
 }

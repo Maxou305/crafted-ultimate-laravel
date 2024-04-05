@@ -22,7 +22,7 @@ return new class extends Migration {
             $table->string('color', 20);
             $table->string('material', 20);
             $table->string('size', 10);
-            $table->foreignUuid('shop_id')->constrained('shops');
+            $table->foreignUuid('shop_id')->constrained('shops')->onDelete('cascade');
             $table->timestamps();
         });
     }

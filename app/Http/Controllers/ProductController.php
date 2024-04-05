@@ -4,8 +4,7 @@ namespace App\Http\Controllers;
 
 use App\DTO\ProductDTO;
 use App\Models\Product;
-use App\Http\Requests\StoreProductRequest;
-use App\Http\Requests\UpdateProductRequest;
+use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 
 class ProductController extends Controller
@@ -40,13 +39,17 @@ class ProductController extends Controller
      */
     public function getByCategory($category)
     {
-//        $productList = Product::with(['shop', 'shop.user'])->where('category', $category)->get();
-//        if ($productList === null) {
-//            return response()->json(['message' => 'Product not found'], 404);
-//        }
-//        $proid
-//        $productListDTO = new ProductDTO($productList);
-//        return response()->json($productDTO);
+        $productList = Product::with(['shop', 'shop.user'])->where('category', $category)->get();
+        if ($productList === null) {
+            return response()->json(['message' => 'Product not found'], 404);
+        }
+        $productList->map(function ($product) {
+            return new ProductDTO($product);
+        });
+        if ($productList->count() === 1){
+            return response()->json($productList->first());
+        }
+        return response()->json($productList);
     }
 
     /**
@@ -61,9 +64,16 @@ class ProductController extends Controller
      * Store a newly created resource in storage.
      */
     public
-    function store(StoreProductRequest $request)
+    function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => 'required',
+            'price' => 'required',
+            'category' => 'required',
+            'shop_id' => 'required'
+        ]);
+        $product = Product::create($request->all());
+        $product->save();
     }
 
     /**
@@ -88,9 +98,11 @@ class ProductController extends Controller
      * Update the specified resource in storage.
      */
     public
-    function update(UpdateProductRequest $request, Product $product)
+    function update(Request $request, $id)
     {
-        //
+        $product = Product::find($id);
+        $product->update($request->all());
+        return response()->json(['message' => 'Product updated']);
     }
 
     /**
@@ -98,8 +110,7 @@ class ProductController extends Controller
      */
     public function destroy($id) : JsonResponse
     {
-        $product = Product::class->find($id);
-//        $product = Product::find($id);
+        $product = Product::find($id);
         if ($product === null) {
             return response()->json(['message' => 'Product not found'], 404);
         }

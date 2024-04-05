@@ -13,6 +13,14 @@ class Shop extends Model
     use HasFactory;
     use HasUuids;
 
+    protected $fillable = [
+        'name',
+        'user_id',
+        'biography',
+        'theme',
+        'logo',
+    ];
+
     public function products(): HasMany
     {
         return $this->hasMany(Product::class);
