@@ -4,58 +4,59 @@ namespace App\Http\Controllers;
 
 use App\DTO\ShopFullDTO;
 use App\Models\Shop;
+use http\Env\Response;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class ShopController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display all the shops.
+     * @return JsonResponse
      */
-    public function index()
+    public function index(): JsonResponse
     {
         $shopList = Shop::with(['user'])->get();
-        return $shopList->map(function ($shop) {
+        $shopList->map(function ($shop) {
             return new ShopFullDTO($shop);
         });
-//        return Shop::with(['user'])->get();
+        return response()->json($shopList, 201);
     }
 
     /**
-     * Display the specified resource.
+     * Display the specified shop.
+     * @param $id
+     * @return JsonResponse
      */
-    public function getById($id)
+    public function getById($id): JsonResponse
     {
         $shop = Shop::with(['user'])->find($id);
         if ($shop === null) {
             return response()->json(['message' => 'Shop not found'], 404);
         }
-        return $shop;
+        return response()->json($shop, 201);
     }
 
     /**
-     * Display the specified resource.
+     * Display the specified shop.
+     * @param $id
+     * @return JsonResponse
      */
-    public function getByUserId($id){
+    public function getByUserId($id): JsonResponse
+    {
         $shop = Shop::with(['user'])->where('user_id', $id)->get();
-        if ($shop === null){
+        if ($shop === null) {
             return response()->json(['message' => 'Shop not found'], 404);
         }
-        return $shop;
+        return response()->json($shop, 201);
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Store a newly created shop in storage.
+     * @param Request $request
+     * @return JsonResponse
      */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function store(Request $request): JsonResponse
     {
         $request->validate([
             'name' => 'required',
@@ -70,44 +71,33 @@ class ShopController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Update the specified shop in storage.
+     * @param Request $request
+     * @param $id
+     * @return JsonResponse
      */
-    public function show(Shop $shop)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Shop $shop)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, $id) : JsonResponse
+    public function update(Request $request, $id): JsonResponse
     {
         $shop = Shop::find($id);
-        if ($shop === null){
+        if ($shop === null) {
             return response()->json(['message' => 'Shop not found'], 404);
         }
         $shop->update($request->all());
-        return response()->json(['message' => 'Shop updated']);
+        return response()->json(['message' => 'Shop updated'], 201);
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the specified shop from storage.
+     * @param $id
+     * @return JsonResponse
      */
-    public function destroy($id) : JsonResponse
+    public function destroy($id): JsonResponse
     {
         $shop = Shop::find($id);
-        if ($shop === null){
+        if ($shop === null) {
             return response()->json(['message' => 'Shop not found'], 404);
         }
         $shop->delete();
-        return response()->json(['message' => 'Shop deleted']);
+        return response()->json(['message' => 'Shop deleted'], 201);
     }
 }

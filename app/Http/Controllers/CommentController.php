@@ -3,29 +3,42 @@
 namespace App\Http\Controllers;
 
 use App\Models\Comment;
+use http\Env\Response;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class CommentController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display all the comments.
+     * @return JsonResponse
      */
-    public function index()
+    public function index(): JsonResponse
     {
-        return Comment::all();
+        $commentList = Comment::all();
+        return response()->json($commentList, 201);
     }
 
-    public function getById($id)
+    /**
+     * Display a comment by id.
+     * @param $id
+     * @return JsonResponse
+     */
+    public function getById($id): JsonResponse
     {
         $comment = Comment::find($id);
         if ($comment === null) {
             return response()->json(['message' => 'Comment not found'], 404);
         }
-        return $comment;
+        return response()->json($comment, 201);
     }
 
-    public function getByUserId($id)
+    /**
+     * Display all the comments by user id.
+     * @param $id
+     * @return JsonResponse
+     */
+    public function getByUserId($id): JsonResponse
     {
         $comment = Comment::where('user_id', $id)->get();
         if ($comment === null) {
@@ -34,10 +47,15 @@ class CommentController extends Controller
         if ($comment->count() === 1) {
             return $comment[0];
         }
-        return $comment;
+        return response()->json($comment, 201);
     }
 
-    public function getByProductId($id)
+    /**
+     * Display all the comments by product id.
+     * @param $id
+     * @return JsonResponse
+     */
+    public function getByProductId($id): JsonResponse
     {
         $comment = Comment::where('product_id', $id)->get();
         if ($comment === null) {
@@ -46,21 +64,15 @@ class CommentController extends Controller
         if ($comment->count() === 1) {
             return $comment[0];
         }
-        return $comment;
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+        return response()->json($comment, 201);
     }
 
     /**
      * Store a newly created resource in storage.
+     * @param Request $request
+     * @return JsonResponse
      */
-    public function store(Request $request)
+    public function store(Request $request): JsonResponse
     {
         $request->validate([
             'content' => 'required',
@@ -73,23 +85,10 @@ class CommentController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     */
-    public function show(Comment $comment)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Comment $comment)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
+     * @param Request $request
+     * @param $id
+     * @return JsonResponse
      */
     public function update(Request $request, $id): JsonResponse
     {
@@ -103,6 +102,8 @@ class CommentController extends Controller
 
     /**
      * Remove the specified resource from storage.
+     * @param $id
+     * @return JsonResponse
      */
     public function destroy($id): JsonResponse
     {
@@ -111,6 +112,6 @@ class CommentController extends Controller
             return response()->json(['message' => 'Comment not found'], 404);
         }
         $comment->delete();
-        return response()->json(['message' => 'Comment deleted']);
+        return response()->json(['message' => 'Comment deleted'], 201);
     }
 }

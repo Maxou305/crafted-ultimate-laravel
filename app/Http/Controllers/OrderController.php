@@ -3,9 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
-use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreCartRequest;
-use App\Http\Requests\UpdateCartRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -13,44 +10,50 @@ use Illuminate\Support\Str;
 class OrderController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display all orders.
+     * @return JsonResponse
      */
-    public function index()
+    public function index(): JsonResponse
     {
-        return Order::with('orderProducts', 'user')->get();
+        $orderList = Order::all();
+        return response()->json($orderList, 201);
     }
 
-    public function getByUserId($id)
+    /**
+     * Display all orders of selected user.
+     * @param $id
+     * @return JsonResponse
+     */
+    public function getByUserId($id): JsonResponse
     {
         $order = Order::where('user_id', $id)->with('orderProducts')->get();
         if ($order === null) {
             return response()->json(['message' => 'Order not found'], 404);
         }
-        return $order;
+        return response()->json($order, 201);
     }
 
-    public function getById($id)
+    /**
+     * Display an order by id.
+     * @param $id
+     * @return JsonResponse
+     */
+    public function getById($id): JsonResponse
     {
         $order = Order::where('id', $id)->with('orderProducts')->get();
         if ($order === null) {
             return response()->json(['message' => 'Order not found'], 404);
         }
         if ($order->count() === 1) {
-            return $order[0];
+            return response()->json($order[0], 201);
         }
-        return $order;
+        return response()->json($order, 201);
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
+     * Store a newly created order in storage.
+     * @param Request $request
+     * @return JsonResponse
      */
     public function store(Request $request): JsonResponse
     {
@@ -66,39 +69,18 @@ class OrderController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Remove the specified order from storage.
+     * @param $id
+     * @return JsonResponse
      */
-    public function show(Order $cart)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Order $cart)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateCartRequest $request, Order $cart)
-    {
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy($id)
+    public function destroy($id): JsonResponse
     {
         $order = Order::find($id);
         if ($order === null) {
             return response()->json(['message' => 'Order not found'], 404);
         }
-//        $order->orderProducts()->delete();
+        $order->orderProducts()->delete();
         $order->delete();
-        return response()->json(['message' => 'Order deleted']);
+        return response()->json(['message' => 'Order deleted'], 201);
     }
 }

@@ -6,38 +6,68 @@ use App\DTO\ProductDTO;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use function PHPUnit\Framework\isEmpty;
 
 class ProductController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display all the products.
+     * @return JsonResponse
      */
-    public function index()
+    public function index(): JsonResponse
     {
         $productList = Product::with(['shop', 'shop.user'])->get();
-        return $productList->map(function ($product) {
+        $productList->map(function ($product) {
             return new ProductDTO($product);
         });
+        return response()->json($productList, 201);
     }
 
     /**
      * Display a product by id.
+     * @param $id
+     * @return JsonResponse
      */
-    public function getById($id)
+    public function getById($id): JsonResponse
     {
         $product = Product::with(['shop', 'shop.user'])->find($id);
         if ($product === null) {
             return response()->json(['message' => 'Product not found'], 404);
         }
         $productDTO = new ProductDTO($product);
-        return response()->json($productDTO);
+        return response()->json($productDTO, 201);
     }
 
+    /**
+     * Display all the products.
+     * @param string $request
+     * @return JsonResponse
+     */
+    public function search(string $request): JsonResponse
+    {
+        $productList = Product::with(['shop', 'shop.user'])
+            ->where('name', 'like', '%' . $request . '%')
+            ->orWhere('description', 'like', '%' . $request . '%')
+            ->orWhere('story', 'like', '%' . $request . '%')
+            ->orWhere('color', 'like', '%' . $request . '%')
+            ->orWhere('category', 'like', '%' . $request . '%')
+            ->orWhere('material', 'like', '%' . $request . '%')
+            ->get();
+        if ($productList->isEmpty()) {
+            return response()->json(['message' => 'Product not found'], 404);
+        }
+        $productList->map(function ($product) {
+            return new ProductDTO($product);
+        });
+        return response()->json($productList, 201);
+    }
 
     /**
      * Display a product by id.
+     * @param string $category
+     * @return JsonResponse
      */
-    public function getByCategory($category)
+    public function getByCategory(string $category): JsonResponse
     {
         $productList = Product::with(['shop', 'shop.user'])->where('category', $category)->get();
         if ($productList === null) {
@@ -46,25 +76,18 @@ class ProductController extends Controller
         $productList->map(function ($product) {
             return new ProductDTO($product);
         });
-        if ($productList->count() === 1){
+        if ($productList->count() === 1) {
             return response()->json($productList->first());
         }
-        return response()->json($productList);
+        return response()->json($productList, 201);
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Store a newly created product in storage.
+     * @param Request $request
+     * @return JsonResponse
      */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public
-    function store(Request $request)
+    public function store(Request $request): JsonResponse
     {
         $request->validate([
             'name' => 'required',
@@ -78,44 +101,31 @@ class ProductController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     */
-    public
-    function show(Product $product)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public
-    function edit(Product $product)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
+     * @param Request $request
+     * @param $id
+     * @return JsonResponse
      */
     public
-    function update(Request $request, $id)
+    function update(Request $request, $id): JsonResponse
     {
         $product = Product::find($id);
         $product->update($request->all());
-        return response()->json(['message' => 'Product updated']);
+        return response()->json(['message' => 'Product updated'], 201);
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the specified product from storage.
+     * @param $id
+     * @return JsonResponse
      */
-    public function destroy($id) : JsonResponse
+    public function destroy($id): JsonResponse
     {
         $product = Product::find($id);
         if ($product === null) {
             return response()->json(['message' => 'Product not found'], 404);
         }
         $product->delete();
-        return response()->json(['message' => 'Product deleted']);
+        return response()->json(['message' => 'Product deleted'], 201);
     }
 }

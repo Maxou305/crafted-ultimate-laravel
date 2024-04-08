@@ -3,45 +3,41 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use Faker\Core\Uuid;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display all users.
+     * @return JsonResponse
      */
-    public function index()
+    public function index(): JsonResponse
     {
-        return User::all();
+        $userList = User::all();
+        return response()->json($userList, 201);
     }
 
     /**
      * Display a user by id.
+     * @param $id
+     * @return JsonResponse
      */
-    public function getById($id) : JsonResponse
+    public function getById($id): JsonResponse
     {
         $user = User::find($id);
         if ($user === null) {
             return response()->json(['message' => 'User not found'], 404);
         }
-        return response()->json($user);
-    }
-
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+        return response()->json($user, 201);
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created user in storage.
+     * @param Request $request
+     * @return JsonResponse
      */
-    public function store(Request $request) : JsonResponse
+    public function store(Request $request): JsonResponse
     {
         $request->validate([
             'name' => 'required',
@@ -50,48 +46,37 @@ class UserController extends Controller
         ]);
         $user = User::create($request->all());
         $user->save();
-        return response()->json($user);
+        return response()->json($user, 201);
     }
 
     /**
-     * Display the specified resource.
+     * Update the specified user in storage.
+     * @param Request $request
+     * @param $id
+     * @return JsonResponse
      */
-    public function show(User $user)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(User $user)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, $id) : JsonResponse
+    public function update(Request $request, $id): JsonResponse
     {
         $user = User::find($id);
         if ($user === null) {
             return response()->json(['message' => 'User not found'], 404);
         }
         $user->update($request->all());
-        return response()->json(['message' => 'User updated']);
+        return response()->json(['message' => 'User updated'], 201);
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the specified user from storage.
+     * @param $id
+     * @return JsonResponse
      */
-    public function destroy($id) : JsonResponse
+    public function destroy($id): JsonResponse
     {
         $user = User::find($id);
         if ($user === null) {
             return response()->json(['message' => 'User not found'], 404);
         }
         $user->delete();
-        return response()->json(['message' => 'User deleted']);
+        return response()->json(['message' => 'User deleted'], 201);
     }
 }
