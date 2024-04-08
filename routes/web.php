@@ -19,6 +19,7 @@ Route::get('/csrf', function () {
 Route::get('/products', [ProductController::class, 'index'])->name('products.index');
 Route::get('/products/{id}', [ProductController::class, 'getById'])->name('products.getById');
 Route::get('/products/category/{category}', [ProductController::class, 'getByCategory'])->name('products.getByCategory');
+Route::get('/products/search/{name}', [ProductController::class, 'search'])->name('products.search');
 
 Route::post('/products', [ProductController::class, 'store'])->name('products.store');
 
@@ -56,7 +57,7 @@ Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');
 
 Route::delete('/orders/{id}', [OrderController::class, 'destroy'])->name('orders.destroy');
 
-// ORDER PRODUCTS
+// ORDER PRODUCTS TODO implémenter les routes
 
 // COMMENTS
 Route::get('/comments', [CommentController::class, 'index'])->name('comments.index');
