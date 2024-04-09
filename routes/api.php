@@ -16,9 +16,10 @@ Route::get('/csrf', function () {
 });
 
 // PRODUCTS
+Route::get('/products/filter', [ProductController::class, 'filter'])->name('products.filter');
+Route::get('/products/sort', [ProductController::class, 'sort'])->name('products.sort');
 Route::get('/products', [ProductController::class, 'index'])->name('products.index');
 Route::get('/products/{id}', [ProductController::class, 'getById'])->name('products.getById');
-Route::get('/products/category/{category}', [ProductController::class, 'getByCategory'])->name('products.getByCategory');
 Route::get('/products/search/{name}', [ProductController::class, 'search'])->name('products.search');
 
 Route::post('/products', [ProductController::class, 'store'])->name('products.store');
