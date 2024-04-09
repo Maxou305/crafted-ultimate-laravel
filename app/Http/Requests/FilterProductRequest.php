@@ -2,12 +2,11 @@
 
 namespace App\Http\Requests;
 
-use App\Models\Comment;
-use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Contracts\Validation\Validator;
 
-class UpdateCommentRequest extends FormRequest
+class FilterProductRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -18,17 +17,6 @@ class UpdateCommentRequest extends FormRequest
         return true;
     }
 
-    public function prepareForValidation(): void
-    {
-        $comment = Comment::find($this->id);
-        if ($comment === null) {
-            throw new HttpResponseException(response()->json([
-                'success' => false,
-                'message' => 'Comment not found',
-            ], 404));
-        }
-    }
-
     /**
      * Get the validation rules that apply to the request.
      *
@@ -37,7 +25,11 @@ class UpdateCommentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'content' => ['nullable', 'string'],
+            'name' => ['string'],
+            'price' => ['numeric'],
+            'category' => ['string'],
+            'color' => ['string'],
+            'material' => ['string'],
         ];
     }
 
@@ -49,7 +41,11 @@ class UpdateCommentRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'content.string' => 'The content must be a string',
+            'name.string' => 'The name must be a string',
+            'price.numeric' => 'The price must be a number',
+            'category.string' => 'The category must be a string',
+            'color.string' => 'The color must be a string',
+            'material.string' => 'The material must be a string',
         ];
     }
 

@@ -2,12 +2,11 @@
 
 namespace App\Http\Requests;
 
-use App\Models\Comment;
-use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Contracts\Validation\Validator;
 
-class UpdateCommentRequest extends FormRequest
+class SortProductRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -18,17 +17,6 @@ class UpdateCommentRequest extends FormRequest
         return true;
     }
 
-    public function prepareForValidation(): void
-    {
-        $comment = Comment::find($this->id);
-        if ($comment === null) {
-            throw new HttpResponseException(response()->json([
-                'success' => false,
-                'message' => 'Comment not found',
-            ], 404));
-        }
-    }
-
     /**
      * Get the validation rules that apply to the request.
      *
@@ -37,7 +25,8 @@ class UpdateCommentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'content' => ['nullable', 'string'],
+            'column' => ['required', 'string'],
+            'order' => ['required', 'string', 'in:asc,desc'],
         ];
     }
 
@@ -49,7 +38,11 @@ class UpdateCommentRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'content.string' => 'The content must be a string',
+            'column.required' => 'The column is required',
+            'column.string' => 'The column must be a string',
+            'order.required' => 'The order is required',
+            'order.string' => 'The order must be a string',
+            'order.in' => 'The order must be asc or desc',
         ];
     }
 

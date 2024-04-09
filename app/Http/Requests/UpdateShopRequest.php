@@ -2,12 +2,12 @@
 
 namespace App\Http\Requests;
 
-use App\Models\Comment;
+use App\Models\Shop;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class UpdateCommentRequest extends FormRequest
+class UpdateShopRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -20,11 +20,11 @@ class UpdateCommentRequest extends FormRequest
 
     public function prepareForValidation(): void
     {
-        $comment = Comment::find($this->id);
-        if ($comment === null) {
+        $shop = Shop::find($this->id);
+        if ($shop === null) {
             throw new HttpResponseException(response()->json([
                 'success' => false,
-                'message' => 'Comment not found',
+                'message' => 'Shop not found',
             ], 404));
         }
     }
@@ -37,7 +37,10 @@ class UpdateCommentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'content' => ['nullable', 'string'],
+            'name' => ['string', 'max:50'],
+            'biography' => ['string', 'max:200'],
+            'theme' => ['string', 'max:20'],
+            'logo' => ['string'],
         ];
     }
 
@@ -49,7 +52,13 @@ class UpdateCommentRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'content.string' => 'The content must be a string',
+            'name.string' => 'Name must be a string',
+            'name.max' => 'Name must not exceed 50 characters',
+            'biography.string' => 'Biography must be a string',
+            'biography.max' => 'Biography must not exceed 200 characters',
+            'theme.string' => 'Theme must be a string',
+            'theme.max' => 'Theme must not exceed 20 characters',
+            'logo.string' => 'Logo must be a string',
         ];
     }
 
