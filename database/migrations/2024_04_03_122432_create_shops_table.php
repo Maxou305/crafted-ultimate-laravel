@@ -13,8 +13,8 @@ return new class extends Migration {
         Schema::create('shops', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('name', 50);
-            $table->string('biography');
-            $table->string('theme', 20);
+            $table->string('biography', 200);
+            $table->string('theme', 20)->default('light');
             $table->string('logo');
             $table->foreignUuid('user_id')->constrained('users')->onDelete('cascade');
             $table->timestamps();

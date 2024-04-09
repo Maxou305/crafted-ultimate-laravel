@@ -15,13 +15,13 @@ return new class extends Migration {
             $table->string('name', 50);
             $table->string('description', 200);
             $table->string('story', 200);
-            $table->float('price', 2);
-            $table->integer('quantity');
+            $table->float('price', 2)->unsigned();
+            $table->integer('stock')->unsigned();
             $table->string('image');
             $table->string('category', 20);
-            $table->string('color', 20);
-            $table->string('material', 20);
-            $table->string('size', 10);
+            $table->string('color', 20)->nullable();
+            $table->string('material', 20)->nullable();
+            $table->string('size', 10)->nullable();
             $table->foreignUuid('shop_id')->constrained('shops')->onDelete('cascade');
             $table->timestamps();
         });
