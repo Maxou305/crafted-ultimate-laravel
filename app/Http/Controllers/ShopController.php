@@ -3,16 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\DTO\ShopFullDTO;
+use App\Http\Requests\StoreShopRequest;
+use App\Http\Requests\UpdateShopRequest;
 use App\Models\Shop;
-use http\Env\Response;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 class ShopController extends Controller
 {
     /**
      * Display all the shops.
-     * @return JsonResponse
+     * @return JsonResponse : JSON response with the list of shops
      */
     public function index(): JsonResponse
     {
@@ -25,8 +25,8 @@ class ShopController extends Controller
 
     /**
      * Display the specified shop.
-     * @param $id
-     * @return JsonResponse
+     * @param $id : The id of the shop
+     * @return JsonResponse : JSON response with the shop
      */
     public function getById($id): JsonResponse
     {
@@ -39,8 +39,8 @@ class ShopController extends Controller
 
     /**
      * Display the specified shop.
-     * @param $id
-     * @return JsonResponse
+     * @param $id : The id of the user
+     * @return JsonResponse : JSON response with the shop
      */
     public function getByUserId($id): JsonResponse
     {
@@ -53,18 +53,11 @@ class ShopController extends Controller
 
     /**
      * Store a newly created shop in storage.
-     * @param Request $request
-     * @return JsonResponse
+     * @param StoreShopRequest $request : The request containing the shop data
+     * @return JsonResponse : JSON response with the shop created
      */
-    public function store(Request $request): JsonResponse
+    public function store(StoreShopRequest $request): JsonResponse
     {
-        $request->validate([
-            'name' => 'required',
-            'user_id' => 'required',
-            'biography' => 'required',
-            'theme' => 'required',
-            'logo' => 'required',
-        ]);
         $shop = Shop::create($request->all());
         $shop->save();
         return response()->json($shop, 201);
@@ -72,24 +65,21 @@ class ShopController extends Controller
 
     /**
      * Update the specified shop in storage.
-     * @param Request $request
-     * @param $id
-     * @return JsonResponse
+     * @param UpdateShopRequest $request : The request containing the shop data
+     * @param $id : The id of the shop
+     * @return JsonResponse : JSON response with the shop updated
      */
-    public function update(Request $request, $id): JsonResponse
+    public function update(UpdateShopRequest $request, $id): JsonResponse
     {
         $shop = Shop::find($id);
-        if ($shop === null) {
-            return response()->json(['message' => 'Shop not found'], 404);
-        }
         $shop->update($request->all());
         return response()->json(['message' => 'Shop updated'], 201);
     }
 
     /**
      * Remove the specified shop from storage.
-     * @param $id
-     * @return JsonResponse
+     * @param $id : The id of the shop
+     * @return JsonResponse : JSON response with the shop deleted
      */
     public function destroy($id): JsonResponse
     {

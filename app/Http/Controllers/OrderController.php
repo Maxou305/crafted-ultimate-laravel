@@ -2,16 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreOrderRequest;
 use App\Models\Order;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 
 class OrderController extends Controller
 {
     /**
      * Display all orders.
-     * @return JsonResponse
+     * @return JsonResponse : JSON response with all orders.
      */
     public function index(): JsonResponse
     {
@@ -21,8 +20,8 @@ class OrderController extends Controller
 
     /**
      * Display all orders of selected user.
-     * @param $id
-     * @return JsonResponse
+     * @param $id : User ID.
+     * @return JsonResponse : JSON response with all orders of selected user.
      */
     public function getByUserId($id): JsonResponse
     {
@@ -35,8 +34,8 @@ class OrderController extends Controller
 
     /**
      * Display an order by id.
-     * @param $id
-     * @return JsonResponse
+     * @param $id : Order ID.
+     * @return JsonResponse : JSON response with the order.
      */
     public function getById($id): JsonResponse
     {
@@ -52,17 +51,16 @@ class OrderController extends Controller
 
     /**
      * Store a newly created order in storage.
-     * @param Request $request
-     * @return JsonResponse
+     * @param StoreOrderRequest $request : Request with order data.
+     * @return JsonResponse : JSON response with the created order.
      */
-    public function store(Request $request): JsonResponse
+    public function store(StoreOrderRequest $request): JsonResponse
     {
-        $request->validate([
-            'user_id' => 'required',
-        ]);
+        $highestOrderNumber = Order::max('order_number');
+        $newOrderNumber = $highestOrderNumber ? $highestOrderNumber + 1 : 1;
         $order = Order::create([
             'user_id' => $request->user_id,
-            'order_number' => Str::uuid(),
+            'order_number' => $newOrderNumber
         ]);
         $order->save();
         return response()->json($order, 201);
@@ -70,8 +68,8 @@ class OrderController extends Controller
 
     /**
      * Remove the specified order from storage.
-     * @param $id
-     * @return JsonResponse
+     * @param $id : Order ID.
+     * @return JsonResponse : JSON response with message of deletion.
      */
     public function destroy($id): JsonResponse
     {

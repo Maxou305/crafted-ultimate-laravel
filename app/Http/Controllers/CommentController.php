@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreCommentRequest;
+use App\Http\Requests\UpdateCommentRequest;
 use App\Models\Comment;
-use http\Env\Response;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 class CommentController extends Controller
 {
     /**
      * Display all the comments.
-     * @return JsonResponse
+     * @return JsonResponse : JSON response with the list of comments
      */
     public function index(): JsonResponse
     {
@@ -21,8 +21,8 @@ class CommentController extends Controller
 
     /**
      * Display a comment by id.
-     * @param $id
-     * @return JsonResponse
+     * @param $id : Comment id
+     * @return JsonResponse : JSON response with the comment
      */
     public function getById($id): JsonResponse
     {
@@ -35,8 +35,8 @@ class CommentController extends Controller
 
     /**
      * Display all the comments by user id.
-     * @param $id
-     * @return JsonResponse
+     * @param $id : User id
+     * @return JsonResponse : JSON response with the list of comments
      */
     public function getByUserId($id): JsonResponse
     {
@@ -52,8 +52,8 @@ class CommentController extends Controller
 
     /**
      * Display all the comments by product id.
-     * @param $id
-     * @return JsonResponse
+     * @param $id : Product id
+     * @return JsonResponse : JSON response with the list of comments
      */
     public function getByProductId($id): JsonResponse
     {
@@ -69,16 +69,11 @@ class CommentController extends Controller
 
     /**
      * Store a newly created resource in storage.
-     * @param Request $request
-     * @return JsonResponse
+     * @param StoreCommentRequest $request : Request with the comment data
+     * @return JsonResponse : JSON response with the created comment
      */
-    public function store(Request $request): JsonResponse
+    public function store(StoreCommentRequest $request): JsonResponse
     {
-        $request->validate([
-            'content' => 'required',
-            'user_id' => 'required',
-            'product_id' => 'required',
-        ]);
         $comment = Comment::create($request->all());
         $comment->save();
         return response()->json($comment, 201);
@@ -86,24 +81,21 @@ class CommentController extends Controller
 
     /**
      * Update the specified resource in storage.
-     * @param Request $request
-     * @param $id
-     * @return JsonResponse
+     * @param UpdateCommentRequest $request : Request with the comment data
+     * @param $id : Comment id
+     * @return JsonResponse : JSON response with the updated comment
      */
-    public function update(Request $request, $id): JsonResponse
+    public function update(UpdateCommentRequest $request, $id)
     {
         $comment = Comment::find($id);
-        if ($comment === null) {
-            return response()->json(['message' => 'Comment not found'], 404);
-        }
         $comment->update(['content' => $request->get('content')]);
-        return response()->json($comment, 201);
+        return $comment;
     }
 
     /**
      * Remove the specified resource from storage.
-     * @param $id
-     * @return JsonResponse
+     * @param $id : Comment id
+     * @return JsonResponse : JSON response with the message
      */
     public function destroy($id): JsonResponse
     {

@@ -16,7 +16,7 @@ class ProductDTO
     public $material;
     public $color;
     public $size;
-    public $quantity;
+    public $stock;
     public $shop;
 
     public function __construct(Product $product)
@@ -31,7 +31,7 @@ class ProductDTO
         $this->material = $product->material;
         $this->color = $product->color;
         $this->size = $product->size;
-        $this->quantity = $product->quantity;
+        $this->stock = $product->stock;
         $this->shop = new ShopFullDTO($product->shop);
     }
 }

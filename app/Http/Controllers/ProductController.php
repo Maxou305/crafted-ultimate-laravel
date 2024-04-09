@@ -3,20 +3,23 @@
 namespace App\Http\Controllers;
 
 use App\DTO\ProductDTO;
+use App\Http\Requests\FilterProductRequest;
+use App\Http\Requests\SortProductRequest;
+use App\Http\Requests\StoreProductRequest;
+use App\Http\Requests\UpdateProductRequest;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
-use function PHPUnit\Framework\isEmpty;
 
 class ProductController extends Controller
 {
     /**
      * Display all the products.
-     * @return JsonResponse
+     * @return JsonResponse : JSON response with all the products
      */
     public function index(): JsonResponse
     {
-        $productList = Product::with(['shop', 'shop.user'])->get();
+        $productList = Product::with(['shop', 'user'])->get();
         $productList->map(function ($product) {
             return new ProductDTO($product);
         });
@@ -25,8 +28,8 @@ class ProductController extends Controller
 
     /**
      * Display a product by id.
-     * @param $id
-     * @return JsonResponse
+     * @param $id : Product id
+     * @return JsonResponse : JSON response with the product
      */
     public function getById($id): JsonResponse
     {
@@ -40,8 +43,8 @@ class ProductController extends Controller
 
     /**
      * Display all the products.
-     * @param string $request
-     * @return JsonResponse
+     * @param string $request : Search request
+     * @return JsonResponse : JSON response with all the products
      */
     public function search(string $request): JsonResponse
     {
@@ -63,38 +66,39 @@ class ProductController extends Controller
     }
 
     /**
-     * Display a product by id.
-     * @param string $category
-     * @return JsonResponse
+     * Display a filtered list of products by id.
+     * @param FilterProductRequest $request : Request with the product data
+     * @return JsonResponse : JSON response with the product(s)
      */
-    public function getByCategory(string $category): JsonResponse
+    public function filter(FilterProductRequest $request): JsonResponse
     {
-        $productList = Product::with(['shop', 'shop.user'])->where('category', $category)->get();
-        if ($productList === null) {
-            return response()->json(['message' => 'Product not found'], 404);
+        $params = $request->input();
+        $query = Product::query();
+        foreach ($params as $key => $value) {
+            $query->where($key, $value);
         }
-        $productList->map(function ($product) {
-            return new ProductDTO($product);
-        });
-        if ($productList->count() === 1) {
-            return response()->json($productList->first());
-        }
-        return response()->json($productList, 201);
+        return response()->json($query->get(), 201);
+    }
+
+    /**
+     * Display a sorted list of products by id.
+     * @param SortProductRequest $request : Request with the product data
+     * @return JsonResponse : JSON response with the product(s)
+     */
+    public function sort(SortProductRequest $request): JsonResponse
+    {
+        $params = $request->input();
+        $query = Product::query()->orderBy($params['column'], $params['order']);
+        return response()->json($query->get(), 201);
     }
 
     /**
      * Store a newly created product in storage.
-     * @param Request $request
-     * @return JsonResponse
+     * @param StoreProductRequest $request : Request with the product data
+     * @return JsonResponse : JSON response with the product
      */
-    public function store(Request $request): JsonResponse
+    public function store(StoreProductRequest $request): JsonResponse
     {
-        $request->validate([
-            'name' => 'required',
-            'price' => 'required',
-            'category' => 'required',
-            'shop_id' => 'required'
-        ]);
         $product = Product::create($request->all());
         $product->save();
         return response()->json($product, 201);
@@ -102,12 +106,12 @@ class ProductController extends Controller
 
     /**
      * Update the specified resource in storage.
-     * @param Request $request
-     * @param $id
-     * @return JsonResponse
+     * @param UpdateProductRequest $request : Request with the product data
+     * @param $id : Product id
+     * @return JsonResponse : JSON response with the product
      */
     public
-    function update(Request $request, $id): JsonResponse
+    function update(UpdateProductRequest $request, $id): JsonResponse
     {
         $product = Product::find($id);
         $product->update($request->all());
@@ -116,8 +120,8 @@ class ProductController extends Controller
 
     /**
      * Remove the specified product from storage.
-     * @param $id
-     * @return JsonResponse
+     * @param $id : Product id
+     * @return JsonResponse : JSON response with a message
      */
     public function destroy($id): JsonResponse
     {

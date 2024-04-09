@@ -19,7 +19,7 @@ class Product extends Model
         'price',
         'category',
         'shop_id',
-        'quantity',
+        'stock',
         'image',
         'color',
         'material',
@@ -27,13 +27,18 @@ class Product extends Model
         'story',
     ];
 
-    public function shop() : BelongsTo
+    public function shop(): BelongsTo
     {
         return $this->belongsTo(Shop::class);
     }
 
-    public function comments() : HasMany
+    public function comments(): HasMany
     {
         return $this->hasMany(Comment::class);
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 }
