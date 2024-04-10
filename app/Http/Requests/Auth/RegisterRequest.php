@@ -8,6 +8,9 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 
 class RegisterRequest extends FormRequest
 {
+    /**
+     * Determine if the user is authorized to make this request.
+     */
     public function rules(): array
     {
         return [
@@ -17,6 +20,9 @@ class RegisterRequest extends FormRequest
         ];
     }
 
+    /**
+     * Get the error messages for the defined validation rules.
+     */
     public function messages(): array
     {
         return [
@@ -33,6 +39,9 @@ class RegisterRequest extends FormRequest
         ];
     }
 
+    /**
+     * Handle a failed validation attempt.
+     */
     public function failedValidation(Validator $validator)
     {
         throw new HttpResponseException(response()->json([

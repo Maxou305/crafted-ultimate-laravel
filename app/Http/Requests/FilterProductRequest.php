@@ -19,8 +19,7 @@ class FilterProductRequest extends FormRequest
 
     /**
      * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * @return array<string, string> The validation rules
      */
     public function rules(): array
     {
@@ -35,8 +34,7 @@ class FilterProductRequest extends FormRequest
 
     /**
      * Get the error messages for the defined validation rules.
-     *
-     * @return array<string, string>
+     * @return array<string, string> The error messages
      */
     public function messages(): array
     {
@@ -49,6 +47,10 @@ class FilterProductRequest extends FormRequest
         ];
     }
 
+    /**
+     * Handle a failed validation attempt.
+     * @param Validator $validator The validator instance
+     */
     public function failedValidation(Validator $validator)
     {
         throw new HttpResponseException(response()->json([
