@@ -11,13 +11,16 @@ class UpdateProductRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
+     * @return bool True if the user is authorized, false otherwise
      */
     public function authorize(): bool
     {
-        // TODO add authorization logic
-        return true;
+        return $this->user_id === auth()->id();
     }
 
+    /**
+     * Prepare the data for validation.
+     */
     public function prepareForValidation(): void
     {
         $product = Product::find($this->id);
@@ -31,8 +34,7 @@ class UpdateProductRequest extends FormRequest
 
     /**
      * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * @return array<string, string> The validation rules for the request
      */
     public function rules(): array
     {
@@ -52,7 +54,6 @@ class UpdateProductRequest extends FormRequest
 
     /**
      * Get the error messages for the defined validation rules.
-     *
      * @return array<string, string>
      */
     public function messages(): array
@@ -71,6 +72,10 @@ class UpdateProductRequest extends FormRequest
         ];
     }
 
+    /**
+     * Handle a failed validation attempt.
+     * @param Validator $validator The validator that failed
+     */
     public function failedValidation(Validator $validator)
     {
         throw new HttpResponseException(response()->json([

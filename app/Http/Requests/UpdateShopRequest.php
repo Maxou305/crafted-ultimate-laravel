@@ -11,13 +11,16 @@ class UpdateShopRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
+     * @return bool True if the user is authorized, false otherwise
      */
     public function authorize(): bool
     {
-        // TODO add authorization logic
-        return true;
+        return $this->user_id === auth()->id();
     }
 
+    /**
+     * Prepare the data for validation.
+     */
     public function prepareForValidation(): void
     {
         $shop = Shop::find($this->id);
@@ -31,8 +34,7 @@ class UpdateShopRequest extends FormRequest
 
     /**
      * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * @return array<string, string> The rules to apply for the request data validation
      */
     public function rules(): array
     {
@@ -46,8 +48,7 @@ class UpdateShopRequest extends FormRequest
 
     /**
      * Get the error messages for the defined validation rules.
-     *
-     * @return array<string, string>
+     * @return array<string, string> The error messages for the defined validation rules
      */
     public function messages(): array
     {
@@ -62,6 +63,11 @@ class UpdateShopRequest extends FormRequest
         ];
     }
 
+    /**
+     * Handle a failed validation attempt.
+     * @param Validator $validator The validator that failed
+     * @return HttpResponseException The HTTP response exception
+     */
     public function failedValidation(Validator $validator)
     {
         throw new HttpResponseException(response()->json([

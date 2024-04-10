@@ -11,8 +11,7 @@ class StoreCommentRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        // TODO add authorization logic
-        return true;
+        return $this->user_id === auth()->id();
     }
 
     /**

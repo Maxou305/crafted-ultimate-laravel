@@ -10,17 +10,16 @@ class StoreProductRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
+     * @return bool Whether the user is authorized to make this request
      */
     public function authorize(): bool
     {
-        // TODO add authorization logic
-        return true;
+        return $this->user_id === auth()->id();
     }
 
     /**
      * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * @return array<string, string> The validation rules
      */
     public function rules(): array
     {
@@ -40,8 +39,7 @@ class StoreProductRequest extends FormRequest
 
     /**
      * Get the error messages for the defined validation rules.
-     *
-     * @return array<string, string>
+     * @return array<string, string> The error messages
      */
     public function messages(): array
     {
@@ -75,6 +73,10 @@ class StoreProductRequest extends FormRequest
         ];
     }
 
+    /**
+     * Handle a failed validation attempt.
+     * @param Validator $validator The validator that failed
+     */
     public function failedValidation(Validator $validator)
     {
         throw new HttpResponseException(response()->json([
