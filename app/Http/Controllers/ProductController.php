@@ -7,7 +7,10 @@ use App\Http\Requests\SortProductRequest;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
 use App\Models\Product;
+use App\Models\Shop;
+use http\Env\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Auth;
 
 class ProductController extends Controller
 {
@@ -87,7 +90,12 @@ class ProductController extends Controller
      */
     public function store(StoreProductRequest $request): JsonResponse
     {
-        $product = Product::create($request->all());
+        $shopId = Shop::where('user_id', Auth::id())->first()->id;
+        $product = Product::create(
+            array_merge(
+                $request->all(),
+                ['shop_id' => $shopId]
+            ));
         $product->save();
         return response()->json($product, 201);
     }

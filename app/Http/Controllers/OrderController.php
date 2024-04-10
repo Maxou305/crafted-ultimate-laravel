@@ -69,12 +69,11 @@ class OrderController extends Controller
      */
     public function store(StoreOrderRequest $request): JsonResponse
     {
-//        $highestOrderNumber = Order::max('order_number');
-//        $newOrderNumber = $highestOrderNumber ? $highestOrderNumber + 1 : 1;
+        $highestOrderNumber = Order::max('order_number');
+        $newOrderNumber = $highestOrderNumber ? $highestOrderNumber + 1 : 1;
         $order = Order::create([
             'user_id' => $request->user_id,
-//            'order_number' => $newOrderNumber
-            'order_number' => Str::uuid()
+            'order_number' => $newOrderNumber
         ]);
         $order->save();
         return response()->json($order, 201);

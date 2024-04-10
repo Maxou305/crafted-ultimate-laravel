@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Support\Facades\Auth;
 
 class UpdateUserRequest extends FormRequest
 {
@@ -15,7 +16,7 @@ class UpdateUserRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return $this->user_id === auth()->id();
+        return Auth::check() && $this->id === Auth::id();
     }
 
     /**

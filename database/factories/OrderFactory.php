@@ -18,7 +18,7 @@ class OrderFactory extends Factory
     public function definition(): array
     {
         return [
-            'order_number' => $this->faker->uuid(),
+            'order_number' => $this->faker->randomNumber(),
             'user_id' => DB::table('users')->inRandomOrder()->first()->id,
         ];
     }

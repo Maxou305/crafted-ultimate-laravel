@@ -6,6 +6,7 @@ use App\Http\Requests\StoreCommentRequest;
 use App\Http\Requests\UpdateCommentRequest;
 use App\Models\Comment;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Auth;
 
 class CommentController extends Controller
 {
@@ -74,7 +75,11 @@ class CommentController extends Controller
      */
     public function store(StoreCommentRequest $request): JsonResponse
     {
-        $comment = Comment::create($request->all());
+        $comment = Comment::create(
+            array_merge(
+                $request->all(),
+                ['user_id' => Auth::id()]
+            ));
         $comment->save();
         return response()->json($comment, 201);
     }

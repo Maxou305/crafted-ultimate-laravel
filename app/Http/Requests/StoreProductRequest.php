@@ -14,8 +14,9 @@ class StoreProductRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return $this->user_id === auth()->id();
+        return true;
     }
+
 
     /**
      * Get the validation rules that apply to the request.

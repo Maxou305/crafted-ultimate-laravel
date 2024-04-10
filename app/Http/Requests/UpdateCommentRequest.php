@@ -6,6 +6,7 @@ use App\Models\Comment;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Support\Facades\Auth;
 
 class UpdateCommentRequest extends FormRequest
 {
@@ -15,7 +16,7 @@ class UpdateCommentRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return $this->user_id === auth()->id();
+        return Auth::check() && $this->user()->id === Comment::find($this->id)->user_id;
     }
 
     /**

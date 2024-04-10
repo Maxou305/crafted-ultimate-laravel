@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Shop;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 
 class StoreShopRequest extends FormRequest
 {
@@ -12,7 +14,7 @@ class StoreShopRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return $this->user_id === auth()->id();
+        return Shop::where('user_id', Auth::id()) === null;
     }
 
     /**

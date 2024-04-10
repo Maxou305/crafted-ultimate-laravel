@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\DTO\ShopFullDTO;
 use App\Http\Requests\StoreShopRequest;
 use App\Http\Requests\UpdateShopRequest;
 use App\Models\Shop;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Auth;
 
 class ShopController extends Controller
 {
@@ -17,9 +17,6 @@ class ShopController extends Controller
     public function index(): JsonResponse
     {
         $shopList = Shop::with(['user'])->get();
-        $shopList->map(function ($shop) {
-            return new ShopFullDTO($shop);
-        });
         return response()->json($shopList, 201);
     }
 
@@ -58,7 +55,12 @@ class ShopController extends Controller
      */
     public function store(StoreShopRequest $request): JsonResponse
     {
-        $shop = Shop::create($request->all());
+        $shop = Shop::create(
+            array_merge(
+                $request->all(),
+                ['user_id' => Auth::id()]
+            )
+        );
         $shop->save();
         return response()->json($shop, 201);
     }

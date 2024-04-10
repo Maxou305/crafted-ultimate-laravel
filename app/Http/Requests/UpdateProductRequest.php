@@ -3,9 +3,11 @@
 namespace App\Http\Requests;
 
 use App\Models\Product;
+use App\Models\Shop;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Support\Facades\Auth;
 
 class UpdateProductRequest extends FormRequest
 {
@@ -15,7 +17,7 @@ class UpdateProductRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return $this->user_id === auth()->id();
+        return Shop::where('user_id', Auth::id())->firstOrFail()->user_id === Auth::id();
     }
 
     /**

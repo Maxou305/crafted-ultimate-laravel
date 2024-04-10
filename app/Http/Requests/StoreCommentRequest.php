@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 
 class StoreCommentRequest extends FormRequest
 {
@@ -11,7 +12,7 @@ class StoreCommentRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return $this->user_id === auth()->id();
+        return Auth::check();
     }
 
     /**
@@ -23,7 +24,6 @@ class StoreCommentRequest extends FormRequest
     {
         return [
             'content' => ['required', 'string', 'max:200'],
-            'user_id' => ['required', 'string'],
             'product_id' => ['required', 'string'],
         ];
     }
@@ -39,8 +39,6 @@ class StoreCommentRequest extends FormRequest
             'content.required' => 'The content is required',
             'content.string' => 'The content must be a string',
             'content.max' => 'The content must not be greater than 200 characters',
-            'user_id.required' => 'The user_id is required',
-            'user_id.string' => 'The user_id must be a string',
             'product_id.required' => 'The product_id is required',
             'product_id.string' => 'The product_id must be a string',
         ];

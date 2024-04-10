@@ -18,7 +18,6 @@ class DatabaseSeeder extends Seeder
             ShopSeeder::class,
             ProductSeeder::class,
             OrderSeeder::class,
-//            OrderProductSeeder::class,
             CommentSeeder::class,
         ]);
     }

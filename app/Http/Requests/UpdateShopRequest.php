@@ -6,6 +6,7 @@ use App\Models\Shop;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Support\Facades\Auth;
 
 class UpdateShopRequest extends FormRequest
 {
@@ -15,7 +16,7 @@ class UpdateShopRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return $this->user_id === auth()->id();
+        return Auth::check() && Shop::find($this->id)->user_id === Auth::id();
     }
 
     /**
