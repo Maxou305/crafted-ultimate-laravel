@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\DestroyUserRequest;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Models\User;
@@ -63,15 +64,14 @@ class UserController extends Controller
 
     /**
      * Remove the specified user from storage.
+     * @param DestroyUserRequest $request : The request containing the user data
      * @param $id : The id of the user
      * @return JsonResponse : JSON response with the user deleted
      */
-    public function destroy($id): JsonResponse
+    public function destroy(DestroyUserRequest $request, $id): JsonResponse
     {
+        $request->validated();
         $user = User::find($id);
-        if ($user === null) {
-            return response()->json(['message' => 'User not found'], 404);
-        }
         $user->delete();
         return response()->json(['message' => 'User deleted'], 201);
     }

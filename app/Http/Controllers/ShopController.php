@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\DestroyShopRequest;
 use App\Http\Requests\StoreShopRequest;
 use App\Http\Requests\UpdateShopRequest;
 use App\Models\Shop;
@@ -80,15 +81,14 @@ class ShopController extends Controller
 
     /**
      * Remove the specified shop from storage.
+     * @param DestroyShopRequest $request : The request containing the shop data
      * @param $id : The id of the shop
      * @return JsonResponse : JSON response with the shop deleted
      */
-    public function destroy($id): JsonResponse
+    public function destroy(DestroyShopRequest $request, $id): JsonResponse
     {
+        $request->validated();
         $shop = Shop::find($id);
-        if ($shop === null) {
-            return response()->json(['message' => 'Shop not found'], 404);
-        }
         $shop->delete();
         return response()->json(['message' => 'Shop deleted'], 201);
     }

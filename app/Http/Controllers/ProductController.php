@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\DestroyProductRequest;
 use App\Http\Requests\FilterProductRequest;
 use App\Http\Requests\SortProductRequest;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
 use App\Models\Product;
 use App\Models\Shop;
-use http\Env\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 
@@ -116,15 +116,14 @@ class ProductController extends Controller
 
     /**
      * Remove the specified product from storage.
+     * @param DestroyProductRequest $request : Request with the product data
      * @param $id : Product id
      * @return JsonResponse : JSON response with a message
      */
-    public function destroy($id): JsonResponse
+    public function destroy(DestroyProductRequest $request, $id): JsonResponse
     {
+        $request->validated();
         $product = Product::find($id);
-        if ($product === null) {
-            return response()->json(['message' => 'Product not found'], 404);
-        }
         $product->delete();
         return response()->json(['message' => 'Product deleted'], 201);
     }

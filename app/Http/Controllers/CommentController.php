@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\DestroyCommentRequest;
 use App\Http\Requests\StoreCommentRequest;
 use App\Http\Requests\UpdateCommentRequest;
 use App\Models\Comment;
@@ -102,12 +103,10 @@ class CommentController extends Controller
      * @param $id : Comment id
      * @return JsonResponse : JSON response with the message
      */
-    public function destroy($id): JsonResponse
+    public function destroy(DestroyCommentRequest $request, $id): JsonResponse
     {
+        $request->validated();
         $comment = Comment::find($id);
-        if ($comment === null) {
-            return response()->json(['message' => 'Comment not found'], 404);
-        }
         $comment->delete();
         return response()->json(['message' => 'Comment deleted'], 201);
     }
