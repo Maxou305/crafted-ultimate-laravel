@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
@@ -15,12 +14,6 @@ Route::get('/', function () {
 Route::get('/csrf', function () {
     return csrf_token();
 });
-Route::group(['middleware' => 'auth:sanctum'], function () {
-    Route::get('me', [AuthController::class, 'me'])->name('me');
-    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-});
-Route::post('/register', [AuthController::class, 'register'])->name('register');
-Route::post('/login', [AuthController::class, 'login'])->name('login');
 
 // PRODUCTS
 Route::get('/products/filter', [ProductController::class, 'filter'])->name('products.filter');

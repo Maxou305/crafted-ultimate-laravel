@@ -2,13 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\DTO\ProductDTO;
 use App\Http\Requests\FilterProductRequest;
 use App\Http\Requests\SortProductRequest;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
 use App\Models\Product;
-use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 
 class ProductController extends Controller
