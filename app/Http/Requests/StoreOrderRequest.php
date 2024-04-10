@@ -11,8 +11,8 @@ class StoreOrderRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        // TODO add authorization logic
-        return true;
+//        return Auth::id() === $this->user()->id;
+    return true;
     }
 
     /**

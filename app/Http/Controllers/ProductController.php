@@ -20,9 +20,6 @@ class ProductController extends Controller
     public function index(): JsonResponse
     {
         $productList = Product::with(['shop', 'user'])->get();
-        $productList->map(function ($product) {
-            return new ProductDTO($product);
-        });
         return response()->json($productList, 201);
     }
 
@@ -34,11 +31,7 @@ class ProductController extends Controller
     public function getById($id): JsonResponse
     {
         $product = Product::with(['shop', 'shop.user'])->find($id);
-        if ($product === null) {
-            return response()->json(['message' => 'Product not found'], 404);
-        }
-        $productDTO = new ProductDTO($product);
-        return response()->json($productDTO, 201);
+        return response()->json($product, 201);
     }
 
     /**
@@ -59,9 +52,6 @@ class ProductController extends Controller
         if ($productList->isEmpty()) {
             return response()->json(['message' => 'Product not found'], 404);
         }
-        $productList->map(function ($product) {
-            return new ProductDTO($product);
-        });
         return response()->json($productList, 201);
     }
 

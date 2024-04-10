@@ -58,8 +58,6 @@ Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');
 
 Route::delete('/orders/{id}', [OrderController::class, 'destroy'])->name('orders.destroy');
 
-// ORDER PRODUCTS TODO implémenter les routes
-
 // COMMENTS
 Route::get('/comments', [CommentController::class, 'index'])->name('comments.index');
 Route::get('/comments/{id}', [CommentController::class, 'getById'])->name('comments.getById');

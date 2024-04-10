@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Order extends Model
@@ -20,6 +21,7 @@ class Order extends Model
 
     protected $hidden = [
         'user_id',
+        'updated_at',
     ];
 
     public function user(): BelongsTo
@@ -27,8 +29,8 @@ class Order extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function orderProducts(): HasMany
+    public function products(): BelongsToMany
     {
-        return $this->hasMany(OrderProduct::class);
+        return $this->belongsToMany(Product::class, 'order_products');
     }
 }
