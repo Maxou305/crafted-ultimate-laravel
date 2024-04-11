@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreOrderRequest;
+use App\Http\Resources\OrderResource;
 use App\Models\Order;
 use Illuminate\Http\JsonResponse;
 
@@ -14,30 +15,7 @@ class OrderController extends Controller
      */
     public function index(): JsonResponse
     {
-        $orderList = Order::with(['user', 'products' => function ($query) {
-            $query->select(
-                'products.id',
-                'order_products.price',
-                'order_products.quantity',
-                'order_products.size',
-                'order_products.color',
-                'order_products.material',
-                'products.shop_id'
-            );
-        }])->get();
-
-        $orderList->each(function ($order) {
-            $order->user->makeHidden(
-                'pseudo',
-                'profile_picture',
-            );
-            $order->products->each(function ($product) {
-                $product->makeHidden(
-                    'pivot',
-                );
-            });
-        });
-
+        $orderList = OrderResource::collection(Order::with(['user', 'products'])->get());
         return response()->json($orderList, 201);
     }
 
@@ -70,7 +48,6 @@ class OrderController extends Controller
      */
     public function store(StoreOrderRequest $request): JsonResponse
     {
-//        dd($request->input());
         $highestOrderNumber = Order::max('order_number');
         $newOrderNumber = $highestOrderNumber ? $highestOrderNumber + 1 : 1;
 
