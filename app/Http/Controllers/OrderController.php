@@ -26,7 +26,8 @@ class OrderController extends Controller
      */
     public function getByUserId($id): JsonResponse
     {
-        $order = Order::where('user_id', $id)->with('orderProducts')->get();
+        $order = Order::where('user_id', $id)->with(['user', 'products'])->get();
+        $order = OrderResource::collection($order);
         return response()->json($order, 201);
     }
 
@@ -37,7 +38,8 @@ class OrderController extends Controller
      */
     public function getById($id): JsonResponse
     {
-        $order = Order::where('id', $id)->with('orderProducts')->get();
+        $order = Order::where('id', $id)->with(['user', 'products'])->get();
+        $order = OrderResource::collection($order);
         return response()->json($order, 201);
     }
 
