@@ -17,10 +17,10 @@ Ce projet est une application web construite avec le framework Laravel. Il s'agi
 
 ## Technologies utilisées
 
-- Laravel : Un framework PHP pour le développement web.
-- SQlite : Un système de gestion de base de données relationnelle.
+- Laravel : framework PHP pour le développement web.
+- SQlite : système de gestion de base de données relationnelle.
 
-## Versions
+## Versions des technologies
 
 - Laravel : 11.0
 - PHP : 8.2
@@ -29,6 +29,18 @@ Ce projet est une application web construite avec le framework Laravel. Il s'agi
 - Node.js : 16.13.0
 - NPM : 8.1.0
 - Sanctum : 2.12.0
+
+## Utilisation de l'API
+
+Pour lancer le serveur de développement, exécutez la commande suivante :
+
+```bash
+php artisan serve
+```
+
+Pour accéder à l'API, ouvrez votre navigateur et accédez à l'URL suivante : http://127.0.0.1:8000
+
+Pour accéder à la documentation de l'API, ouvrez votre navigateur et accédez à l'URL suivante : https://documenter.getpostman.com/view/31334199/2sA3BhdEEK
 
 ## License
 
