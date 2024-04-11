@@ -10,17 +10,16 @@ class SortProductRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
+     * @return bool True if the user is authorized, false otherwise
      */
     public function authorize(): bool
     {
-        // TODO add authorization logic
         return true;
     }
 
     /**
      * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * @return array<string, string> Validation rules
      */
     public function rules(): array
     {
@@ -32,8 +31,7 @@ class SortProductRequest extends FormRequest
 
     /**
      * Get the error messages for the defined validation rules.
-     *
-     * @return array<string, string>
+     * @return array<string, string> Error messages
      */
     public function messages(): array
     {
@@ -46,6 +44,11 @@ class SortProductRequest extends FormRequest
         ];
     }
 
+    /**
+     * Handle a failed validation attempt.
+     * @param Validator $validator The validator that failed
+     * @return void
+     */
     public function failedValidation(Validator $validator)
     {
         throw new HttpResponseException(response()->json([

@@ -17,7 +17,7 @@ class UpdateProductRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return Shop::where('user_id', Auth::id())->firstOrFail()->user_id === Auth::id();
+        return Auth::check() && Shop::where('user_id', Auth::id())->firstOrFail()->user_id === Auth::id();
     }
 
     /**

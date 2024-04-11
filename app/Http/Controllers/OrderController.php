@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\AddProductToOrderRequest;
 use App\Http\Requests\StoreOrderRequest;
 use App\Models\Order;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Str;
 
 class OrderController extends Controller
 {
@@ -53,12 +53,6 @@ class OrderController extends Controller
     public function getById($id): JsonResponse
     {
         $order = Order::where('id', $id)->with('orderProducts')->get();
-        if ($order === null) {
-            return response()->json(['message' => 'Order not found'], 404);
-        }
-        if ($order->count() === 1) {
-            return response()->json($order[0], 201);
-        }
         return response()->json($order, 201);
     }
 
@@ -71,10 +65,16 @@ class OrderController extends Controller
     {
         $highestOrderNumber = Order::max('order_number');
         $newOrderNumber = $highestOrderNumber ? $highestOrderNumber + 1 : 1;
+
         $order = Order::create([
-            'user_id' => $request->user_id,
+            'user_id' => $request->user()->id,
             'order_number' => $newOrderNumber
         ]);
+//        dd($request->input());
+        foreach ($request->input() as $product) {
+            $order->products()->attach($product['id'], ['quantity' => $product['quantity']]);
+        }
+
         $order->save();
         return response()->json($order, 201);
     }
@@ -87,9 +87,6 @@ class OrderController extends Controller
     public function destroy($id): JsonResponse
     {
         $order = Order::find($id);
-        if ($order === null) {
-            return response()->json(['message' => 'Order not found'], 404);
-        }
         $order->orderProducts()->delete();
         $order->delete();
         return response()->json(['message' => 'Order deleted'], 201);

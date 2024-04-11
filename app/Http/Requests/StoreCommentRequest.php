@@ -9,6 +9,7 @@ class StoreCommentRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
+     * @return bool True if the user is authorized, false otherwise
      */
     public function authorize(): bool
     {
@@ -17,8 +18,7 @@ class StoreCommentRequest extends FormRequest
 
     /**
      * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * @return array<string, string> Validation rules
      */
     public function rules(): array
     {
@@ -30,8 +30,7 @@ class StoreCommentRequest extends FormRequest
 
     /**
      * Get the error messages for the defined validation rules.
-     *
-     * @return array<string, string>
+     * @return array<string, string> Error messages
      */
     public function messages(): array
     {

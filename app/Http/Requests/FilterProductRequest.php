@@ -13,7 +13,6 @@ class FilterProductRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        // TODO add authorization logic
         return true;
     }
 
