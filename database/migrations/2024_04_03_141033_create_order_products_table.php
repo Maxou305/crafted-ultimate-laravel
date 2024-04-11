@@ -4,17 +4,18 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
     public function up(): void
     {
         Schema::create('order_products', function (Blueprint $table) {
-            $table->uuid('id')->primary();
             $table->integer('quantity');
-            $table->float('price', 2);
+            $table->decimal('price');
+            $table->string('size')->nullable();
+            $table->string('color')->nullable();
+            $table->string('material')->nullable();
             $table->foreignUuid('product_id')->constrained('products');
             $table->foreignUuid('order_id')->constrained('orders')->onDelete('cascade');
             $table->timestamps();

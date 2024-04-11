@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\AddProductToOrderRequest;
 use App\Http\Requests\StoreOrderRequest;
 use App\Models\Order;
 use Illuminate\Http\JsonResponse;
@@ -15,22 +14,30 @@ class OrderController extends Controller
      */
     public function index(): JsonResponse
     {
-        $orderList = Order::with('products')->get();
+        $orderList = Order::with(['user', 'products' => function ($query) {
+            $query->select(
+                'products.id',
+                'order_products.price',
+                'order_products.quantity',
+                'order_products.size',
+                'order_products.color',
+                'order_products.material',
+                'products.shop_id'
+            );
+        }])->get();
+
         $orderList->each(function ($order) {
+            $order->user->makeHidden(
+                'pseudo',
+                'profile_picture',
+            );
             $order->products->each(function ($product) {
                 $product->makeHidden(
-                    'shop_id',
-                    'image',
-                    'description',
-                    'story',
                     'pivot',
-                    'created_at',
-                    'updated_at',
-                    'color',
-                    'material',
-                    'size');
+                );
             });
         });
+
         return response()->json($orderList, 201);
     }
 
@@ -63,6 +70,7 @@ class OrderController extends Controller
      */
     public function store(StoreOrderRequest $request): JsonResponse
     {
+//        dd($request->input());
         $highestOrderNumber = Order::max('order_number');
         $newOrderNumber = $highestOrderNumber ? $highestOrderNumber + 1 : 1;
 
@@ -70,9 +78,17 @@ class OrderController extends Controller
             'user_id' => $request->user()->id,
             'order_number' => $newOrderNumber
         ]);
-//        dd($request->input());
+
         foreach ($request->input() as $product) {
-            $order->products()->attach($product['id'], ['quantity' => $product['quantity']]);
+            $order->products()->attach(
+                $product['id'],
+                ['quantity' => $product['quantity'],
+                    'price' => $product['price'],
+                    'size' => array_key_exists('size', $product) ? $product['size'] : null,
+                    'color' => array_key_exists('color', $product) ? $product['color'] : null,
+                    'material' => array_key_exists('material', $product) ? $product['material'] : null,
+                ]
+            );
         }
 
         $order->save();

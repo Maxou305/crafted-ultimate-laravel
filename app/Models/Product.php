@@ -22,9 +22,6 @@ class Product extends Model
         'shop_id',
         'stock',
         'image',
-        'color',
-        'material',
-        'size',
         'story',
     ];
 
