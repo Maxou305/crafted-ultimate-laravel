@@ -1,0 +1,98 @@
+openapi: 3.0.0
+info:
+  title: 'Crafted API'
+  description: "Cette APi permet d'accéder à toutes les fonctionnalités de l'application Crafted."
+  contact:
+    email: maxime.chazard@le-campus-numerique.fr
+  version: 1.0.0
+paths:
+  /api/products:
+    get:
+      tags:
+        - Products
+      summary: 'Get list of all products'
+      description: 'Returns list of products'
+      operationId: 1bfaa78d1c2c3848ab8165c5dadcad3e
+      responses:
+        200:
+          description: 'Successful operation'
+        401:
+          description: Unauthorized
+    post:
+      tags:
+        - Products
+      summary: 'Create a product'
+      description: 'Create a product'
+      operationId: e8185e307706e2cd84bbcf5171e2f09d
+      requestBody:
+        description: 'Product data'
+        required: true
+        content:
+          application/json:
+            schema:
+              required:
+                - name
+                - description
+                - story
+                - price
+                - stock
+                - image
+                - category
+              properties:
+                name:
+                  type: string
+                  example: 'Product name'
+                description:
+                  type: string
+                  example: 'Product description'
+                story:
+                  type: string
+                  example: 'Product story'
+                price:
+                  type: number
+                  format: float
+                  example: 10.99
+                stock:
+                  type: integer
+                  example: 10
+                image:
+                  type: string
+                  example: 'Product image'
+                category:
+                  type: string
+                  example: 'Product category'
+                color:
+                  type: string
+                  example: 'Product color'
+                material:
+                  type: string
+                  example: 'Product material'
+                size:
+                  type: string
+                  example: 'Product size'
+              type: object
+      responses:
+        200:
+          description: 'Successful operation'
+        401:
+          description: Unauthorized
+  '/api/products/{id}':
+    get:
+      tags:
+        - Products
+      summary: 'Get a product by id'
+      description: 'Returns a product'
+      operationId: 0f2900456e348f53b24eb29a42c884da
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'ID of the product'
+          required: true
+      responses:
+        200:
+          description: 'Successful operation'
+        401:
+          description: Unauthorized
+        404:
+          description: 'Product not found'
