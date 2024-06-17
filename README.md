@@ -42,6 +42,8 @@ Pour accéder à l'API, ouvrez votre navigateur et accédez à l'URL suivante : 
 
 Pour accéder à la documentation de l'API, ouvrez votre navigateur et accédez à l'URL suivante : https://documenter.getpostman.com/view/31334199/2sA3BhdEEK
 
+Une documentation est aussi disponible dans le dossier `storage/api-docs/api-docs.json` à la racine du projet ou via Swagger : http://127.0.0.1:8000/api/documentation
+
 ## License
 
 _A déterminer._
