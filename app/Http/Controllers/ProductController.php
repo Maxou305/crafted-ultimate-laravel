@@ -11,12 +11,29 @@ use App\Models\Product;
 use App\Models\Shop;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
+use OpenApi\Annotations as OA;
 
 class ProductController extends Controller
 {
     /**
      * Display all the products.
      * @return JsonResponse : JSON response with all the products
+     */
+    /**
+     * @OA\Get(
+     *     path="/api/products",
+     *     tags={"Products"},
+     *     summary="Get list of all products",
+     *     description="Returns list of products",
+     *     @OA\Response(
+     *         response=200,
+     *         description="successful operation",
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized"
+     *     )
+     * )
      */
     public function index(): JsonResponse
     {
@@ -28,6 +45,32 @@ class ProductController extends Controller
      * Display a product by id.
      * @param $id : Product id
      * @return JsonResponse : JSON response with the product
+     */
+    /**
+     * @OA\Get(
+     *     path="/api/products/{id}",
+     *     tags={"Products"},
+     *     summary="Get a product by id",
+     *     description="Returns a product",
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized"
+     *     ),
+     *     @OA\Response(
+     *          response=404,
+     *          description="Product not found"
+     *    ),
+     *     @OA\Parameter(
+     *          name="id",
+     *          in="path",
+     *          description="ID of the product",
+     *          required=true,
+     *     ),
+     * )
      */
     public function getById($id): JsonResponse
     {
@@ -87,6 +130,39 @@ class ProductController extends Controller
      * Store a newly created product in storage.
      * @param StoreProductRequest $request : Request with the product data
      * @return JsonResponse : JSON response with the product
+     */
+    /**
+     * @OA\Post(
+     *     path="/api/products",
+     *     tags={"Products"},
+     *     summary="Create a product",
+     *     description="Create a product",
+     *     @OA\RequestBody(
+     *         required=true,
+     *         description="Product data",
+     *         @OA\JsonContent(
+     *             required={"name", "description", "story", "price", "stock", "image", "category"},
+     *             @OA\Property(property="name", type="string", example="Product name"),
+     *             @OA\Property(property="description", type="string", example="Product description"),
+     *             @OA\Property(property="story", type="string", example="Product story"),
+     *             @OA\Property(property="price", type="number", format="float", example=10.99),
+     *             @OA\Property(property="stock", type="integer", example=10),
+     *             @OA\Property(property="image", type="string", example="Product image"),
+     *             @OA\Property(property="category", type="string", example="Product category"),
+     *             @OA\Property(property="color", type="string", example="Product color"),
+     *             @OA\Property(property="material", type="string", example="Product material"),
+     *             @OA\Property(property="size", type="string", example="Product size")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation"
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized"
+     *     )
+     * )
      */
     public function store(StoreProductRequest $request): JsonResponse
     {
