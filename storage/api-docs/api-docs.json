@@ -19,7 +19,7 @@
                 "operationId": "1bfaa78d1c2c3848ab8165c5dadcad3e",
                 "responses": {
                     "200": {
-                        "description": "successful operation"
+                        "description": "Successful operation"
                     },
                     "401": {
                         "description": "Unauthorized"
@@ -98,7 +98,7 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "successful operation"
+                        "description": "Successful operation"
                     },
                     "401": {
                         "description": "Unauthorized"
@@ -124,7 +124,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "successful operation"
+                        "description": "Successful operation"
                     },
                     "401": {
                         "description": "Unauthorized"

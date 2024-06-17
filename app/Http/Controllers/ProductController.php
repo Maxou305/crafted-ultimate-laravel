@@ -27,7 +27,7 @@ class ProductController extends Controller
      *     description="Returns list of products",
      *     @OA\Response(
      *         response=200,
-     *         description="successful operation",
+     *         description="Successful operation",
      *     ),
      *     @OA\Response(
      *         response=401,
