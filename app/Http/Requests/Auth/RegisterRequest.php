@@ -14,7 +14,7 @@ class RegisterRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:30'],
+            'username' => ['required', 'string', 'max:20'],
             'email' => ['required', 'string', 'email', 'unique:users'],
             'password' => ['required', 'string', 'min:8'],
         ];
@@ -26,7 +26,9 @@ class RegisterRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'name.required' => 'The name is required',
+            'username.required' => 'The username is required',
+            'username.string' => 'The username must be a string',
+            'username.max' => 'The username must not exceed 20 characters',
             'name.string' => 'The name must be a string',
             'name.max' => 'The name must not exceed 30 characters',
             'email.required' => 'The email is required',
@@ -48,6 +50,7 @@ class RegisterRequest extends FormRequest
             'success' => false,
             'message' => 'Validation errors',
             'data' => $validator->errors()
-        ]));
+        ],
+            400));
     }
 }

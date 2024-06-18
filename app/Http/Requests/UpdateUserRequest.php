@@ -41,7 +41,7 @@ class UpdateUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'pseudo' => ['nullable', 'string', 'max:20'],
+            'username' => ['nullable', 'string', 'max:20'],
             'name' => ['nullable', 'string', 'max:30'],
             'email' => ['nullable', 'email'],
             'password' => ['nullable', 'string'],
@@ -59,8 +59,8 @@ class UpdateUserRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'pseudo.string' => 'The pseudo must be a string',
-            'pseudo.max' => 'The pseudo must not be greater than 20 characters',
+            'username.string' => 'The username must be a string',
+            'username.max' => 'The username must not be greater than 20 characters',
             'name.string' => 'The name must be a string',
             'name.max' => 'The name must not be greater than 30 characters',
             'email.email' => 'The email must be a valid email',

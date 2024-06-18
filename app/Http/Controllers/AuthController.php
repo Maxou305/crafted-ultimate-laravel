@@ -13,11 +13,10 @@ class AuthController extends Controller
 {
     public function register(RegisterRequest $request): JsonResponse
     {
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => bcrypt($request->password),
-        ]);
+        $user = User::create(
+            $request->all(),
+            ['password' => bcrypt($request->password)]
+        );
 
         $token = $user->createToken('auth_token')->plainTextToken;
 
@@ -49,9 +48,7 @@ class AuthController extends Controller
 
     public function me(Request $request): JsonResponse
     {
-        return response()->json([
-            $request->user(),
-        ]);
+        return response()->json($request->user());
     }
 
     public function logout(Request $request): JsonResponse

@@ -25,8 +25,8 @@ class StoreUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'pseudo' => ['nullable', 'string', 'max:20'],
-            'name' => ['required', 'string', 'max:30'],
+            'username' => ['required', 'string', 'max:20'],
+            'name' => ['nullable','string', 'max:30'],
             'email' => ['required', 'email'],
             'password' => ['required', 'string'],
             'payment_address' => ['nullable', 'string', 'max:50'],
@@ -43,9 +43,8 @@ class StoreUserRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'pseudo.string' => 'The pseudo must be a string',
-            'pseudo.max' => 'The pseudo must not be greater than 20 characters',
-            'name.required' => 'The name is required',
+            'username.string' => 'The username must be a string',
+            'username.max' => 'The username must not be greater than 20 characters',
             'name.string' => 'The name must be a string',
             'name.max' => 'The name must not be greater than 30 characters',
             'email.required' => 'The email is required',

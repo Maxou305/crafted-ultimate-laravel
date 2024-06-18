@@ -18,7 +18,7 @@ Route::get('/csrf', function () {
 
 Route::group(['middleware' => 'auth:sanctum'], function () {
     // AUTH
-    Route::get('me', [AuthController::class, 'me'])->name('me');
+    Route::get('/me', [AuthController::class, 'me'])->name('me');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
     // PRODUCTS
