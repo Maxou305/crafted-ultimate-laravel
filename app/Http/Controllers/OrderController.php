@@ -55,10 +55,17 @@ class OrderController extends Controller
 
         $order = Order::create([
             'user_id' => $request->user()->id,
-            'order_number' => $newOrderNumber
+            'order_number' => $newOrderNumber,
+            'price' => $request->input('price'),
+            'validatedStatus' => $request->input('validatedStatus'),
+            'shippingCountry' => $request->input('shippingCountry'),
+            'shippingMode' => $request->input('shippingMode'),
+            'shippingPrice' => $request->input('shippingPrice'),
+            'creatorCode' => $request->input('creatorCode'),
+            'promoCode' => $request->input('promoCode'),
         ]);
 
-        foreach ($request->input() as $product) {
+        foreach ($request->input('products') as $product) {
             $order->products()->attach(
                 $product['id'],
                 ['quantity' => $product['quantity'],
