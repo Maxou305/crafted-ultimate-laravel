@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreOrderRequest;
 use App\Http\Resources\OrderResource;
 use App\Models\Order;
+use App\Models\Product;
 use Illuminate\Http\JsonResponse;
 
 class OrderController extends Controller
@@ -75,6 +76,7 @@ class OrderController extends Controller
                     'material' => array_key_exists('material', $product) ? $product['material'] : null,
                 ]
             );
+            Product::class->where('id', $product['id'])->decrement('stock', $product['quantity']);
         }
 
         $order->save();
