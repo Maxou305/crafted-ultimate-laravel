@@ -16,6 +16,13 @@ class Order extends Model
     protected $fillable = [
         'user_id',
         'order_number',
+        'price',
+        'validatedStatus',
+        'shippingCountry',
+        'shippingMode',
+        'shippingPrice',
+        'creatorCode',
+        'promoCode',
     ];
 
     protected $hidden = [

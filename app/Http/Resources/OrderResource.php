@@ -42,6 +42,13 @@ class OrderResource extends JsonResource
                     ];
                 });
             }),
+            'price' => $this->price,
+            'validatedStatus' => $this->validatedStatus,
+            'shippingCountry' => $this->shippingCountry,
+            'shippingMode' => $this->shippingMode,
+            'shippingPrice' => $this->shippingPrice,
+            'creatorCode' => $this->creatorCode,
+            'promoCode' => $this->promoCode,
         ];
     }
 }

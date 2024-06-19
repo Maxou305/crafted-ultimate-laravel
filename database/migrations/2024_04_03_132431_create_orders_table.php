@@ -12,8 +12,15 @@ return new class extends Migration {
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->integer('order_number');
+            $table->integer('order_number')-> unique();
             $table->foreignUuid('user_id')->constrained('users')->onDelete('cascade');
+            $table->float('price');
+            $table->boolean('validatedStatus')->nullable();
+            $table->string('shippingCountry')->nullable();
+            $table->string('shippingMode')->nullable();
+            $table->string('shippingPrice')->nullable();
+            $table->string('creatorCode')->nullable();
+            $table->string('promoCode')->nullable();
             $table->timestamps();
         });
     }
