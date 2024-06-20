@@ -6,6 +6,7 @@ use App\Http\Requests\DestroyUserRequest;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Models\User;
+use Illuminate\Http\Client\Request;
 use Illuminate\Http\JsonResponse;
 
 class UserController extends Controller
@@ -59,7 +60,11 @@ class UserController extends Controller
     {
         $user = User::find($id);
         $user->update($request->all());
-        return response()->json(['message' => 'User updated'], 201);
+
+        return response()->json([
+            'message' => 'User updated',
+            'user' => $user
+            ], 201);
     }
 
     /**
