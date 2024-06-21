@@ -37,7 +37,7 @@ class ProductController extends Controller
      */
     public function index(): JsonResponse
     {
-        $productList = Product::with(['shop', 'user'])->get();
+        $productList = Product::with('user')->get();
         return response()->json($productList, 201);
     }
 
@@ -74,7 +74,7 @@ class ProductController extends Controller
      */
     public function getById($id): JsonResponse
     {
-        $product = Product::with(['shop', 'shop.user'])->find($id);
+        $product = Product::find($id);
         return response()->json($product, 201);
     }
 
