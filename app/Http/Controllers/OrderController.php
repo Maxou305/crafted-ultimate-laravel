@@ -76,7 +76,7 @@ class OrderController extends Controller
                     'material' => array_key_exists('material', $product) ? $product['material'] : null,
                 ]
             );
-            Product::class->where('id', $product['id'])->decrement('stock', $product['quantity']);
+            Product::find($product['id'])->decrement('stock', $product['quantity']);
         }
 
         $order->save();
