@@ -13,8 +13,9 @@ return Application::configure(basePath: dirname(__DIR__))
         commands: __DIR__.'/../routes/console.php',
         health: '/up',
     )
+//    TODO handle this shit
     ->withMiddleware(function (Middleware $middleware) {
-       // $middleware->statefulApi();
+        $middleware->statefulApi();
 //        $middleware->use(
 //            [CorsMiddleware::class,
 //            HandleCors::class,
