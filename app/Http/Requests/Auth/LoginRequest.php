@@ -11,7 +11,7 @@ class LoginRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => ['required', 'string', 'email'],
+            'username' => ['required', 'string'],
             'password' => ['required', 'string'],
         ];
     }
@@ -19,9 +19,8 @@ class LoginRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'email.required' => 'The email is required',
-            'email.string' => 'The email must be a string',
-            'email.email' => 'The email must be a valid email',
+            'username.required' => 'The username is required',
+            'username.string' => 'The username must be a string',
             'password.required' => 'The password is required',
             'password.string' => 'The password must be a string',
         ];
