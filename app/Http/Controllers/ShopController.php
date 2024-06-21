@@ -28,7 +28,7 @@ class ShopController extends Controller
      */
     public function getById($id): JsonResponse
     {
-        $shop = Shop::with(['user'])->find($id);
+        $shop = Shop::with(['user', 'products'])->find($id);
         if ($shop === null) {
             return response()->json(['message' => 'Shop not found'], 404);
         }
@@ -42,7 +42,8 @@ class ShopController extends Controller
      */
     public function getByUserId($id): JsonResponse
     {
-        $shop = Shop::with(['user'])->where('user_id', $id)->get();
+        $shop = Shop::where('user_id', $id)->with('products')->first();
+        $shop->makeHidden(['user_id', 'created_at', 'updated_at']);
         if ($shop === null) {
             return response()->json(['message' => 'Shop not found'], 404);
         }
