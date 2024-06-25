@@ -38,7 +38,7 @@ class ProductController extends Controller
     public function index(): JsonResponse
     {
         $productList = Product::with('user')->get();
-        return response()->json($productList, 201);
+        return response()->json($productList);
     }
 
     /**
@@ -75,7 +75,7 @@ class ProductController extends Controller
     public function getById($id): JsonResponse
     {
         $product = Product::find($id);
-        return response()->json($product, 201);
+        return response()->json($product);
     }
 
     /**
@@ -201,6 +201,6 @@ class ProductController extends Controller
         $request->validated();
         $product = Product::find($id);
         $product->delete();
-        return response()->json(['message' => 'Product deleted'], 201);
+        return response()->json(['message' => 'Product deleted']);
     }
 }
