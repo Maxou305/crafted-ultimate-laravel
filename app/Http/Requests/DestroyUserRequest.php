@@ -16,7 +16,7 @@ class DestroyUserRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return Auth::check() && User::find($this->id)->user_id === Auth::id();
+       return true;
     }
 
     /**
@@ -24,7 +24,7 @@ class DestroyUserRequest extends FormRequest
      */
     public function prepareForValidation(): void
     {
-        $user = Shop::find($this->id);
+        $user = User::find($this->id);
         if ($user === null) {
             throw new HttpResponseException(response()->json([
                 'success' => false,

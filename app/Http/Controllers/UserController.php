@@ -8,6 +8,7 @@ use App\Http\Requests\UpdateUserRequest;
 use App\Models\User;
 use Illuminate\Http\Client\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Gate;
 
 class UserController extends Controller
 {
@@ -17,8 +18,14 @@ class UserController extends Controller
      */
     public function index(): JsonResponse
     {
-        $userList = User::all();
-        return response()->json($userList, 201);
+        $response = Gate::inspect('viewAny', User::class);
+
+        if ($response->allowed()) {
+            $userList = User::all();
+            return response()->json($userList, 201);
+        } else {
+            return response()->json(['message' => $response->message()], 403);
+        }
     }
 
     /**
@@ -32,7 +39,14 @@ class UserController extends Controller
         if ($user === null) {
             return response()->json(['message' => 'User not found'], 404);
         }
-        return response()->json($user, 201);
+
+        $response = Gate::inspect('view', $user);
+
+        if ($response->allowed()) {
+            return response()->json($user, 201);
+        } else {
+            return response()->json(['message' => $response->message()], 403);
+        }
     }
 
     /**
@@ -59,12 +73,20 @@ class UserController extends Controller
     public function update(UpdateUserRequest $request, $id): JsonResponse
     {
         $user = User::find($id);
-        $user->update($request->all());
 
-        return response()->json([
-            'message' => 'User updated',
-            'user' => $user
+        $response = Gate::inspect('update', $user);
+
+        if ($response->allowed()) {
+            $user->update($request->all());
+
+            return response()->json([
+                'message' => 'User updated',
+                'user' => $user
             ], 201);
+        }
+        else {
+            return response()->json(['message' => $response->message()], 403);
+        }
     }
 
     /**
@@ -75,9 +97,16 @@ class UserController extends Controller
      */
     public function destroy(DestroyUserRequest $request, $id): JsonResponse
     {
-        $request->validated();
         $user = User::find($id);
-        $user->delete();
-        return response()->json(['message' => 'User deleted'], 201);
+
+        $response = Gate::inspect('delete', $user);
+
+        if ($response->allowed()) {
+            $user->delete();
+            return response()->json(['message' => 'User deleted'], 201);
+        }
+        else {
+            return response()->json(['message' => $response->message()], 403);
+        }
     }
 }
