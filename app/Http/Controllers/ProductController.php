@@ -11,6 +11,7 @@ use App\Models\Product;
 use App\Models\Shop;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use OpenApi\Annotations as OA;
 
 class ProductController extends Controller
@@ -166,6 +167,7 @@ class ProductController extends Controller
      */
     public function store(StoreProductRequest $request): JsonResponse
     {
+//        TODO need to fix : product is not created (server error 500)
         $shopId = Shop::where('user_id', Auth::id())->first()->id;
         $product = Product::create(
             array_merge(
@@ -186,8 +188,15 @@ class ProductController extends Controller
     function update(UpdateProductRequest $request, $id): JsonResponse
     {
         $product = Product::find($id);
-        $product->update($request->all());
-        return response()->json(['message' => 'Product updated'], 201);
+
+        $response = Gate::inspect('update', $product);
+
+        if ($response->allowed()) {
+            $product->update($request->all());
+            return response()->json(['message' => 'Product updated'], 201);
+        } else {
+            return response()->json(['message' => $response->message()], 403);
+        }
     }
 
     /**
@@ -199,8 +208,16 @@ class ProductController extends Controller
     public function destroy(DestroyProductRequest $request, $id): JsonResponse
     {
         $request->validated();
+
         $product = Product::find($id);
-        $product->delete();
-        return response()->json(['message' => 'Product deleted']);
+
+        $response = Gate::inspect('delete', $product);
+
+        if ($response->allowed()) {
+            $product->delete();
+            return response()->json(['message' => 'Product deleted']);
+        }else{
+            return response()->json(['message' => $response->message()], 403);
+        }
     }
 }

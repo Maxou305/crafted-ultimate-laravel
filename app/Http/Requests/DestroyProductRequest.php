@@ -15,7 +15,7 @@ class DestroyProductRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return Auth::check() && Product::find($this->id)->user_id === Auth::id();
+       return true;
     }
 
     /**
