@@ -14,7 +14,7 @@ class StoreShopRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return Auth::check() && Shop::find('user_id', Auth::id()) === null;
+        return Auth::check();
 //        return true;
     }
 

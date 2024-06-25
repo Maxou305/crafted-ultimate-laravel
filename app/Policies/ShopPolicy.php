@@ -5,6 +5,7 @@ namespace App\Policies;
 use Illuminate\Auth\Access\Response;
 use App\Models\Shop;
 use App\Models\User;
+use Illuminate\Http\JsonResponse;
 
 class ShopPolicy
 {
@@ -35,9 +36,12 @@ class ShopPolicy
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, Shop $shop): bool
+    public function update(User $user, Shop $shop): Response
     {
-        return ($user->id === $shop->user_id ) || ($user->role === 'admin');
+        return $user->role === 'admin' || $user->id() === $shop->user_id ?
+            Response::allow()
+            :
+            Response::deny('You do not have permission to update this shop');
     }
 
     /**
@@ -47,6 +51,7 @@ class ShopPolicy
     {
         return ($user->id === $shop->user_id ) || ($user->role === 'admin');
     }
+
 
     /**
      * Determine whether the user can restore the model.

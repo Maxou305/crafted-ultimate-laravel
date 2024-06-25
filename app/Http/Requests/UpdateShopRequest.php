@@ -16,7 +16,7 @@ class UpdateShopRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return Auth::check() && Shop::find($this->id)->user_id === Auth::id();
+        return Auth::id() === $this->user()->id;
     }
 
     /**
