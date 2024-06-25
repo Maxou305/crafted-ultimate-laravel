@@ -47,9 +47,12 @@ class ShopPolicy
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, Shop $shop): bool
+    public function delete(User $user, Shop $shop): Response
     {
-        return ($user->id === $shop->user_id ) || ($user->role === 'admin');
+        return $user->role === 'admin' || $user->id() === $shop->user_id ?
+            Response::allow()
+            :
+            Response::deny('You do not have permission to delete this shop');
     }
 
 

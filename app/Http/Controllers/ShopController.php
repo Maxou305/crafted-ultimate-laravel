@@ -98,7 +98,14 @@ class ShopController extends Controller
     {
         $request->validated();
         $shop = Shop::find($id);
-        $shop->delete();
-        return response()->json(['message' => 'Shop deleted'], 201);
+
+        $response = Gate::inspect('delete', $shop);
+
+        if($response->allowed()) {
+            $shop->delete();
+            return response()->json(['message' => 'Shop deleted']);
+        } else {
+            return response()->json(['message' => $response->message()], 403);
+        }
     }
 }
