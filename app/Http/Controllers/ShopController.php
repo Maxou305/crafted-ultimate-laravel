@@ -6,6 +6,7 @@ use App\Http\Requests\DestroyShopRequest;
 use App\Http\Requests\StoreShopRequest;
 use App\Http\Requests\UpdateShopRequest;
 use App\Models\Shop;
+use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
@@ -58,14 +59,20 @@ class ShopController extends Controller
      */
     public function store(StoreShopRequest $request): JsonResponse
     {
-        $shop = Shop::create(
-            array_merge(
-                $request->all(),
-                ['user_id' => Auth::id()]
-            )
-        );
-        $shop->save();
-        return response()->json($shop, 201);
+        $response = Gate::inspect('store', Shop::class);
+
+        if($response->allowed()) {
+            $shop = Shop::create(
+                array_merge(
+                    $request->all(),
+                    ['user_id' => Auth::id()]
+                )
+            );
+            $shop->save();
+            return response()->json($shop, 201);
+        } else {
+            return response()->json(['message' => $response->message()], 403);
+        }
     }
 
     /**
@@ -74,7 +81,7 @@ class ShopController extends Controller
      * @param $id : The id of the shop
      * @return JsonResponse : JSON response with the shop updated
      */
-    public function update(UpdateShopRequest $request, $id): JsonResponse | string
+    public function update(UpdateShopRequest $request, $id): JsonResponse
     {
         $shop = Shop::find($id);
 
@@ -82,7 +89,7 @@ class ShopController extends Controller
 
         if($response->allowed()) {
             $shop->update($request->all());
-            return response()->json(['message' => 'Shop updated'], 201);
+            return response()->json(['message' => 'Shop updated']);
         } else {
             return response()->json(['message' => $response->message()], 403);
         }
