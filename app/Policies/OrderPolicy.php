@@ -11,17 +11,23 @@ class OrderPolicy
     /**
      * Determine whether the user can view any models.
      */
-    public function viewAny(User $user): bool
+    public function viewAny(User $user): Response
     {
-        return true;
+        return $user->role === 'admin' ?
+            Response::allow()
+            :
+            Response::deny('You do not have permission to view orders');
     }
 
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, Order $order): bool
+    public function view(User $user, Order $order): Response
     {
-        return true;
+        return $user->role === 'admin' || $order->user_id === $user->id ?
+            Response::allow()
+            :
+            Response::deny('You do not have permission to view this order');
     }
 
     /**
@@ -46,21 +52,5 @@ class OrderPolicy
     public function delete(User $user, Order $order): bool
     {
         return $user->role === 'admin';
-    }
-
-    /**
-     * Determine whether the user can restore the model.
-     */
-    public function restore(User $user, Order $order): bool
-    {
-        //
-    }
-
-    /**
-     * Determine whether the user can permanently delete the model.
-     */
-    public function forceDelete(User $user, Order $order): bool
-    {
-        //
     }
 }
