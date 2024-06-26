@@ -39,11 +39,23 @@ class AuthController extends Controller
 
         $token = $user->createToken('auth_token')->plainTextToken;
 
+        $cookie = cookie(
+            'auth_token',
+            $token,
+            60,
+            null,
+            null,
+            false,
+            true,
+            true,
+            'Strict'
+        );
+
         return response()->json([
             'user' => $user,
             'token' => $token,
             'token_type' => 'Bearer',
-        ]);
+        ])->cookie($cookie);
     }
 
     public function me(Request $request): JsonResponse
