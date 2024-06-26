@@ -44,4 +44,30 @@ class ShopTest extends TestCase
 
         $this->assertEquals($fillable, $shop->getFillable());
     }
+
+    public function test_post_shop()
+    {
+        $user = User::factory()->create();
+        $shop = Shop::factory()->create(['user_id' => $user->id]);
+
+        $response = $this->actingAs($user)->post('/api/shops', [
+            'name' => $shop->name,
+            'user_id' => $shop->user_id,
+            'biography' => $shop->biography,
+            'theme' => $shop->theme,
+            'logo' => $shop->logo,
+        ]);
+
+        $response->assertStatus(201);
+    }
+
+    public function test_delete_shop()
+    {
+        $user = User::factory()->create();
+        $shop = Shop::factory()->create(['user_id' => $user->id]);
+
+        $response = $this->actingAs($user)->delete('/api/shops/' . $shop->id);
+
+        $response->assertStatus(200);
+    }
 }
