@@ -45,10 +45,10 @@ class ShopController extends Controller
     public function getByUserId($id): JsonResponse
     {
         $shop = Shop::where('user_id', $id)->with('products')->first();
-        $shop->makeHidden(['user_id', 'created_at', 'updated_at']);
         if ($shop === null) {
             return response()->json(['message' => 'Shop not found'], 404);
         }
+        $shop->makeHidden(['user_id', 'created_at', 'updated_at']);
         return response()->json($shop, 201);
     }
 
@@ -62,12 +62,7 @@ class ShopController extends Controller
         $response = Gate::inspect('store', Shop::class);
 
         if($response->allowed()) {
-            $shop = Shop::create(
-                array_merge(
-                    $request->all(),
-                    ['user_id' => Auth::id()]
-                )
-            );
+            $shop = Shop::create($request->all());
             $shop->save();
             return response()->json($shop, 201);
         } else {

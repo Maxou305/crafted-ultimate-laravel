@@ -5,7 +5,6 @@ namespace App\Http\Requests;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
-use Illuminate\Support\Facades\Auth;
 
 class StoreOrderRequest extends FormRequest
 {
@@ -15,7 +14,6 @@ class StoreOrderRequest extends FormRequest
      */
     public function authorize(): bool
     {
-//        return Auth::id() === $this->user_id;
         return true;
     }
 
@@ -26,13 +24,9 @@ class StoreOrderRequest extends FormRequest
     public function rules(): array
     {
         return [
-//            'user_id' => ['required', 'string'],
-            'color' => 'nullable|string',
-            'material' => 'nullable|string',
-            'size' => 'nullable|string',
-//            'price' => 'required|numeric',
-//            'quantity' => 'required|integer',
-//            'product_id' => 'required|string',
+            'price' => 'required|numeric',
+            'userId' => 'required|uuid',
+            'products' => 'required|array',
         ];
     }
 
@@ -43,17 +37,11 @@ class StoreOrderRequest extends FormRequest
     public function messages(): array
     {
         return [
-//            'user_id.required' => 'The user_id is required',
-//            'user_id.string' => 'The user_id must be a string',
-            'color.string' => 'The color must be a string',
-            'material.string' => 'The material must be a string',
-            'size.string' => 'The size must be a string',
+            'userId.required' => 'The user ID is required',
+            'userId.uuid' => 'The user ID must be a valid UUID',
             'price.required' => 'The price is required',
             'price.numeric' => 'The price must be a number',
-            'quantity.required' => 'The quantity is required',
-            'quantity.integer' => 'The quantity must be an integer',
-            'product_id.required' => 'The product_id is required',
-            'product_id.string' => 'The product_id must be a string',
+            'products.required' => 'The products are required',
         ];
     }
 
