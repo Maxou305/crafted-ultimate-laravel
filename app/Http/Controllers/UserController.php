@@ -33,7 +33,7 @@ class UserController extends Controller
      * @param $id : The id of the user
      * @return JsonResponse : JSON response with the user
      */
-    public function getById($id): JsonResponse
+    public function getById(string $id): JsonResponse
     {
         $user = User::find($id);
         if ($user === null) {

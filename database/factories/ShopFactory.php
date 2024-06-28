@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\DB;
 
@@ -22,7 +23,7 @@ class ShopFactory extends Factory
             'biography' => $this->faker->paragraph(),
             'theme' => $this->faker->word(),
             'logo' => $this->faker->imageUrl(640, 480, 'business', true),
-            'user_id' => DB::table('users')->inRandomOrder()->first()->id,
+            'user_id' => User::factory(),
         ];
     }
 }

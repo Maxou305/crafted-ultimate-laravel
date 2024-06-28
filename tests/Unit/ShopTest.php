@@ -64,10 +64,11 @@ class ShopTest extends TestCase
     public function test_delete_shop()
     {
         $user = User::factory()->create();
-        $shop = Shop::factory()->create(['user_id' => $user->id]);
+        $shop = Shop::factory()->recycle($user)->create();
 
         $response = $this->actingAs($user)->delete('/api/shops/' . $shop->id);
 
         $response->assertStatus(200);
+        $this->assertDatabaseMissing('shops', ['id' => $shop->id]);
     }
 }

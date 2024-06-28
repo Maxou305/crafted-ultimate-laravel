@@ -5,6 +5,7 @@ namespace Tests\Unit;
 use App\Models\Comment;
 use App\Models\Order;
 use App\Models\Shop;
+use Ramsey\Uuid\Uuid;
 use Tests\TestCase;
 use App\Models\User;
 
@@ -41,6 +42,20 @@ class UserTest extends TestCase
         $user->delete();
 
         $this->assertDatabaseMissing('users', ['id' => $user->id]);
+    }
+
+    /**
+     * Test if user has comments relationship.
+     */
+    public function test_wrong_id_raise_an_error()
+    {
+        $id = Uuid::uuid4()->toString();
+        $user = User::factory()->create();
+        $user->role = 'admin';
+
+        $response = $this->actingAs($user)->get('api/users/'. $id);
+
+        $response->assertStatus(404);
     }
 
     /**
