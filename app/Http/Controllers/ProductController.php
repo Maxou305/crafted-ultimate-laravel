@@ -167,7 +167,6 @@ class ProductController extends Controller
      */
     public function store(StoreProductRequest $request): JsonResponse
     {
-//        TODO need to fix : product is not created (server error 500)
         $shopId = Shop::where('user_id', Auth::id())->first()->id;
         $product = Product::create(
             array_merge(
