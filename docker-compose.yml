@@ -1,0 +1,38 @@
+services:
+    backend:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        container_name: backend
+        ports:
+            - 8000:80
+        networks:
+            - craftedby-network
+        environment:
+            MYSQL_HOST: mysql
+            MYSQL_USER: root
+            MYSQL_PASSWORD: root
+            MYSQL_DB: crafted_db
+        depends_on:
+            mysql:
+                condition: service_healthy
+    mysql:
+        image: mysql:8.0.38
+        container_name: mysql
+        volumes:
+            - ../craftedby-mysql-data:/var/lib/mysql
+        environment:
+            MYSQL_ROOT_PASSWORD: root
+            MYSQL_DATABASE: crafted_db
+        networks:
+            - craftedby-network
+        healthcheck:
+            test: [ "CMD-SHELL", "mysqladmin --user=root --password=root ping" ]
+            interval: 10s
+            timeout: 5s
+            retries: 5
+            start_period: 30s
+volumes:
+    craftedby-mysql-data:
+networks:
+    craftedby-network:
