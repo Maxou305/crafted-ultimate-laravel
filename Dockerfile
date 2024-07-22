@@ -18,8 +18,6 @@ COPY . .
 
 RUN composer install --no-interaction --optimize-autoloader --no-dev
 
-RUN php artisan key:generate
-
 RUN php artisan config:cache
 
 RUN php artisan route:cache
