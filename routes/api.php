@@ -16,6 +16,10 @@ Route::get('/csrf', function () {
     return csrf_token();
 });
 
+Route::get("/sanctum/csrf-cookie", function () {
+    return response()->json(["message" => "CSRF cookie set"]);
+});
+
 Route::group(['middleware' => 'auth:sanctum'], function () {
     // AUTH
     Route::get('/me', [AuthController::class, 'me'])->name('me');
