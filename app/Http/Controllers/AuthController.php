@@ -18,12 +18,9 @@ class AuthController extends Controller
             ['password' => bcrypt($request->password)]
         );
 
-        $token = $user->createToken('auth_token')->plainTextToken;
-
+        Auth::login($user);
         return response()->json([
             'user' => $user,
-            'token' => $token,
-            'token_type' => 'Bearer',
         ]);
     }
 
@@ -36,26 +33,12 @@ class AuthController extends Controller
         }
 
         $user = User::where('username', $request->username)->firstOrFail();
-
-        $token = $user->createToken('auth_token')->plainTextToken;
-
-        $cookie = cookie(
-            'auth_token',
-            $token,
-            60,
-            null,
-            null,
-            false,
-            true,
-            true,
-            'Strict'
-        );
+        $request->session()->regenerate();
 
         return response()->json([
+            'message' => 'User authenticated',
             'user' => $user,
-            'token' => $token,
-            'token_type' => 'Bearer',
-        ])->cookie($cookie);
+        ]);
     }
 
     public function me(Request $request): JsonResponse
@@ -65,7 +48,9 @@ class AuthController extends Controller
 
     public function logout(Request $request): JsonResponse
     {
-        $request->user()->currentAccessToken()->delete();
+        Auth::guard('web')->logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
 
         return response()->json([
             'message' => 'Logged out',

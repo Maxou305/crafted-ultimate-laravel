@@ -18,10 +18,10 @@ COPY . .
 
 RUN composer install --no-interaction --optimize-autoloader --no-dev
 
-RUN php artisan config:cache
-
 RUN php artisan route:cache
 
 RUN php artisan view:cache
 
 RUN chown -R application:application .
+
+CMD php artisan migrate --force && php artisan config:cache && supervisord
